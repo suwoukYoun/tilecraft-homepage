@@ -111,10 +111,12 @@
   }
 
   async function loadCatalog() {
+    // Prefer relative catalog for GitHub Pages (/repo/homepage/).
+    // Absolute /api and /homepage paths are for local serve.py only.
     const endpoints = [
+      `./catalog.json?t=${Date.now()}`,
       `/api/catalog?t=${Date.now()}`,
       `/homepage/catalog.json?t=${Date.now()}`,
-      `./catalog.json?t=${Date.now()}`,
     ];
 
     for (const endpoint of endpoints) {

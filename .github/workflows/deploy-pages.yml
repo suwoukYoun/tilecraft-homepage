@@ -1,0 +1,85 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate catalog.json
+        run: python homepage/generate_catalog.py
+
+      - name: Write homepage/env.js from Secrets
+        env:
+          EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
+          EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
+          EMAILJS_TEMPLATE_ID: ${{ secrets.EMAILJS_TEMPLATE_ID }}
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          def esc(value: str) -> str:
+              return (
+                  value.replace("\\", "\\\\")
+                  .replace("'", "\\'")
+                  .replace("\n", "\\n")
+                  .replace("\r", "")
+              )
+
+          public_key = esc(os.environ.get("EMAILJS_PUBLIC_KEY", ""))
+          service_id = esc(os.environ.get("EMAILJS_SERVICE_ID", ""))
+          template_id = esc(os.environ.get("EMAILJS_TEMPLATE_ID", ""))
+          Path("homepage/env.js").write_text(
+              "/* Generated in CI from GitHub Secrets — do not edit */\n"
+              "window.__EMAILJS__ = {\n"
+              f"  publicKey: '{public_key}',\n"
+              f"  serviceId: '{service_id}',\n"
+              f"  templateId: '{template_id}'\n"
+              "};\n",
+              encoding="utf-8",
+          )
+          print("Wrote homepage/env.js")
+          PY
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp -r homepage assets _site/
+          cp index.html _site/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
