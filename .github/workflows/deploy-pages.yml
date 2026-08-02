@@ -67,6 +67,8 @@ jobs:
           mkdir -p _site
           cp -r homepage assets _site/
           cp index.html _site/index.html
+          # Custom domain must live at published site root
+          cp homepage/CNAME _site/CNAME
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
