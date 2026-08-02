@@ -1,0 +1,14 @@
+# Local secrets — never commit
+.env.local
+.env
+.env.*.local
+
+# Generated EmailJS runtime config (created from .env.local)
+homepage/env.js
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

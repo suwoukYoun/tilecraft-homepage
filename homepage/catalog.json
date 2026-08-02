@@ -1,0 +1,202 @@
+{
+  "generatedAt": "2026-08-02T17:49:11",
+  "assetRoot": "../assets",
+  "categories": [
+    {
+      "id": "abstract",
+      "label": "abstract",
+      "sets": [
+        {
+          "id": "zebra_swirl_1SET",
+          "name": "zebra_swirl",
+          "base": "zebra_swirl",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "도시옵아트_1SET",
+          "name": "도시옵아트",
+          "base": "도시옵아트",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "도시의_흉터_1SET",
+          "name": "도시의_흉터",
+          "base": "도시의_흉터",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "레드네트워크_1SET",
+          "name": "레드네트워크",
+          "base": "레드네트워크",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "레드블루스플래시_1SET",
+          "name": "레드블루스플래시",
+          "base": "레드블루스플래시",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "소프트지브라_1SET",
+          "name": "소프트지브라",
+          "base": "소프트지브라",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "에메랄드스카이라인_1SET",
+          "name": "에메랄드스카이라인",
+          "base": "에메랄드스카이라인",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "오렌지그런지숲_1SET",
+          "name": "오렌지그런지숲",
+          "base": "오렌지그런지숲",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "오렌지스플래터웹_1SET",
+          "name": "오렌지스플래터웹",
+          "base": "오렌지스플래터웹",
+          "hasPreview": true,
+          "hasGrid": true
+        }
+      ]
+    },
+    {
+      "id": "ART",
+      "label": "ART",
+      "sets": [
+        {
+          "id": "연꽃그런지아트_1SET",
+          "name": "연꽃그런지아트",
+          "base": "연꽃그런지아트",
+          "hasPreview": true,
+          "hasGrid": true
+        }
+      ]
+    },
+    {
+      "id": "masterpiece",
+      "label": "masterpiece",
+      "sets": [
+        {
+          "id": "키스_1SET",
+          "name": "키스",
+          "base": "키스",
+          "hasPreview": true,
+          "hasGrid": true
+        }
+      ]
+    },
+    {
+      "id": "oriental",
+      "label": "oriental",
+      "sets": [
+        {
+          "id": "산수화(한국형)_1SET",
+          "name": "산수화(한국형)",
+          "base": "산수화(한국형)",
+          "hasPreview": true,
+          "hasGrid": true
+        }
+      ]
+    },
+    {
+      "id": "POP",
+      "label": "POP",
+      "sets": [
+        {
+          "id": "블랙잉크버스트_1SET",
+          "name": "블랙잉크버스트",
+          "base": "블랙잉크버스트",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "블루_아웃_1SET",
+          "name": "블루_아웃",
+          "base": "블루_아웃",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "사이버사이보그파편_1SET",
+          "name": "사이버사이보그파편",
+          "base": "사이버사이보그파편",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "사이버연인파편_1SET",
+          "name": "사이버연인파편",
+          "base": "사이버연인파편",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "폭포_1SET",
+          "name": "폭포",
+          "base": "폭포",
+          "hasPreview": true,
+          "hasGrid": true
+        }
+      ]
+    },
+    {
+      "id": "Typography",
+      "label": "Typography",
+      "sets": [
+        {
+          "id": "NotoNaskhArabic_1SET",
+          "name": "NotoNaskhArabic",
+          "base": "NotoNaskhArabic",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "NotoSansSC_1SET",
+          "name": "NotoSansSC",
+          "base": "NotoSansSC",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "TimesNewRoman_1SET",
+          "name": "TimesNewRoman",
+          "base": "TimesNewRoman",
+          "hasPreview": true,
+          "hasGrid": true
+        },
+        {
+          "id": "환영합니다_1SET",
+          "name": "환영합니다",
+          "base": "환영합니다",
+          "hasPreview": true,
+          "hasGrid": true
+        }
+      ]
+    },
+    {
+      "id": "ContemporarySacredArt",
+      "label": "ContemporarySacredArt",
+      "sets": [
+        {
+          "id": "성스러운소음_1SET",
+          "name": "성스러운소음",
+          "base": "성스러운소음",
+          "hasPreview": true,
+          "hasGrid": true
+        }
+      ]
+    }
+  ]
+}

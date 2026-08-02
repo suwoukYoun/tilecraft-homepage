@@ -1,0 +1,11 @@
+﻿# pixelcraft_order_export_v2
+# merge_similar_colors=false
+# delta_e_threshold=3
+# spare_percent=0
+# project=사이버연인파편
+color_hex,slot_name,unit_weight_g,tile_count,order_count,total_weight_g,tile_size_mm,product_number,notes
+#FFFFFF,Tile 3,,86668,86668,,10.0,,
+#000000,Tile 0,,64715,64715,,10.0,,
+#AA0000,Tile 1,,25577,25577,,10.0,,
+#00007F,Tile 2,,11540,11540,,10.0,,
+TOTAL,,,188500,188500,,,,

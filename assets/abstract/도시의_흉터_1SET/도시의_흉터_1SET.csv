@@ -1,0 +1,10 @@
+﻿# pixelcraft_order_export_v2
+# merge_similar_colors=false
+# delta_e_threshold=3
+# spare_percent=0
+# project=도시의_흉터
+color_hex,slot_name,unit_weight_g,tile_count,order_count,total_weight_g,tile_size_mm,product_number,notes
+#FFFFFF,Tile 2,,114679,114679,,10.0,,
+#000000,Tile 0,,91935,91935,,10.0,,
+#AA0000,Tile 1,,43386,43386,,10.0,,
+TOTAL,,,250000,250000,,,,

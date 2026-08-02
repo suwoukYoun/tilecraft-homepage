@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tile Craft — Any Image, Any Font.</title>
+  <meta name="description" content="초고속 모자이크 타일 제조 플랫폼. 어떤 이미지, 어떤 서체든 30분 시안 · 익일 배송 · 100% 환불." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Instrument Serif"', 'Georgia', 'serif'],
+            sans: ['"Söhne"', '"Pretendard"', 'system-ui', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            craft: {
+              ink: '#0A0A0B',
+              mist: '#F4F5F7',
+              accent: '#E8E8EA',
+              line: 'rgba(255,255,255,0.18)',
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="./style.css?v=20260802j" />
+</head>
+<body class="font-sans antialiased text-white overflow-hidden select-none">
+  <!-- Liquid Background Layers -->
+  <div id="bg-stage" class="bg-stage" aria-hidden="true">
+    <div id="bg-origin" class="bg-layer is-active">
+      <img id="bg-photo" class="bg-photo" alt="" draggable="false" />
+    </div>
+    <div id="bg-flash" class="bg-layer" style="background-image: url('../assets/abstract/레드네트워크_1SET/레드네트워크_grid.png')"></div>
+    <div id="bg-tile" class="bg-layer" style="background-image: url('../assets/abstract/소프트지브라_1SET/소프트지브라_grid.png')"></div>
+    <div class="bg-veil"></div>
+    <div id="liquid-distort" class="liquid-distort"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header fixed top-0 left-0 right-0 z-50 pointer-events-none">
+    <a href="/" class="brand-mark pointer-events-auto group">
+      <span class="brand-title">Tile Craft</span>
+      <span class="brand-subtitle uppercase">
+        <span class="brand-subtitle-en">3/8&quot; MOSAIC TILE SUPPLY</span>
+        <span class="brand-subtitle-ko">(10mm 모자이크 타일 아틀리에)</span>
+      </span>
+    </a>
+  </header>
+
+  <!-- Fixed Navigator UI -->
+  <aside id="navigator" class="navigator pointer-events-auto" aria-label="Navigator UI">
+    <div class="navigator-frame">
+      <div class="navigator-label">
+        <span class="navigator-dot"></span>
+        <span>NAV</span>
+        <button type="button" id="nav-refresh" class="nav-refresh" title="카테고리 다시 스캔">SCAN</button>
+      </div>
+      <div class="navigator-cats" id="nav-cats" role="tablist" aria-label="Categories">
+        <!-- filled by JS -->
+      </div>
+      <div class="navigator-grid" id="nav-grid" role="tabpanel">
+        <!-- filled by JS -->
+      </div>
+      <div
+        id="nav-minimap"
+        class="nav-minimap"
+        role="application"
+        aria-label="Selected preview navigator"
+        title="드래그하여 탐색"
+      >
+        <div id="nav-minimap-frame" class="nav-minimap-frame">
+          <img id="nav-minimap-img" class="nav-minimap-img" alt="" draggable="false" />
+          <div id="nav-viewport" class="nav-viewport"></div>
+        </div>
+      </div>
+      <div class="navigator-meta">
+        <span id="nav-cat-name">abstract</span>
+        <span id="nav-set-name">소프트지브라</span>
+        <span id="nav-mode">GRID</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Stage -->
+  <main class="relative z-10 h-dvh w-full flex flex-col items-center justify-center px-4">
+    <!-- Value teaser + hover popup -->
+    <div id="value-rail" class="value-rail" aria-label="Why global designers choose us">
+      <div id="value-popup-panel" class="value-popup" role="tooltip">
+        <p class="value-line"><span class="value-bold">Custom Design:</span><span class="value-sub">어떤 이미지나 패턴이든 실물 타일 아트웍으로 완벽 구현</span></p>
+        <p class="value-line"><span class="value-bold">30-Min Preview:</span><span class="value-sub">이미지 업로드 후 30분 이내 매칭 타일 시뮬레이션 제공</span></p>
+        <p class="value-line"><span class="value-bold">Next-Day Shipping:</span><span class="value-sub">디자인 확정 즉시 맞춤 가공 및 익일 글로벌 발송</span></p>
+        <p class="value-line"><span class="value-bold">100% Preview Match:</span><span class="value-sub">프리미엄 가공 기법으로 3D 시안 이미지와 100% 일치 보장</span></p>
+      </div>
+      <button type="button" class="value-teaser" aria-describedby="value-popup-panel">
+        [ Why global designers choose us? ]
+      </button>
+    </div>
+
+    <!-- Gravity Dropzone -->
+    <div
+      id="dropzone"
+      class="dropzone"
+      role="button"
+      tabindex="0"
+      aria-label="이미지를 드래그앤드롭하여 30분 만에 시안 받기"
+    >
+      <div class="dropzone-orbit dropzone-orbit--a"></div>
+      <div class="dropzone-orbit dropzone-orbit--b"></div>
+      <div class="dropzone-orbit dropzone-orbit--c"></div>
+      <div class="dropzone-core">
+        <div class="dropzone-ripple"></div>
+        <div class="dropzone-ripple delay"></div>
+        <div class="dropzone-copy-wrap">
+          <p class="dropzone-copy">
+            <span class="dropzone-lead">[ Any Image, Any Script to Mosaic. ]</span>
+            <span class="dropzone-action dropzone-action-ko">어떤 이미지, 세계 모든 언어의 문자까지<br />10mm 모자이크 타일로 완벽 구현</span>
+          </p>
+          <p class="dropzone-hint font-mono">DROP IMAGE - JPG / PNG / WEBP</p>
+        </div>
+      </div>
+      <input id="file-input" type="file" accept="image/*" class="sr-only" />
+    </div>
+
+    <!-- Absorption particles stage -->
+    <div id="absorb-stage" class="absorb-stage" aria-hidden="true"></div>
+
+    <!-- Process status -->
+    <div id="process-status" class="process-status" aria-live="polite">
+      <span class="process-bar"></span>
+      <span id="process-text" class="font-mono">AI TILE COMPUTE</span>
+    </div>
+  </main>
+
+  <!-- Open Announcement Modal -->
+  <div id="launch-modal" class="launch-modal" hidden aria-hidden="true">
+    <div class="launch-modal-backdrop" data-modal-close></div>
+    <div
+      class="launch-modal-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="launch-modal-title"
+    >
+      <button type="button" class="launch-modal-close" data-modal-close aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+
+      <h2 id="launch-modal-title" class="launch-modal-title">
+        Official Launch: February 4th
+      </h2>
+      <p class="launch-modal-title-ko">(2월 4일 정식 오픈 안내)</p>
+
+      <div class="launch-modal-body">
+        <p class="launch-modal-en">
+          We are preparing to bring your designs to life. The beginning of a new season for custom mosaic tiles starts here. Please leave your feedback or inquiries below.
+        </p>
+        <p class="launch-modal-ko">
+          당신의 디자인을 완벽한 실물 아트웍으로 구현하기 위해 준비 중입니다. 커스텀 모자이크 타일의 새로운 시즌이 오는 2월 4일에 시작됩니다. 아래 의견함에 소중한 피드백이나 문의를 남겨주세요.
+        </p>
+      </div>
+
+      <form id="launch-feedback-form" class="launch-modal-form">
+        <label class="sr-only" for="launch-email">Email</label>
+        <input
+          id="launch-email"
+          name="user_email"
+          type="email"
+          class="launch-modal-input"
+          placeholder="Your Email - 이메일 주소를 입력해 주세요"
+          autocomplete="email"
+          required
+        />
+        <label class="sr-only" for="launch-feedback">Feedback / Inquiry</label>
+        <textarea
+          id="launch-feedback"
+          name="message"
+          class="launch-modal-textarea"
+          rows="4"
+          placeholder="Feedback / Inquiry — 의견 또는 문의를 남겨주세요"
+          required
+        ></textarea>
+        <button type="submit" id="launch-submit" class="launch-modal-submit">Send · 보내기</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="launch-toast" class="launch-toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    window.__EMAILJS__ = window.__EMAILJS__ || { publicKey: '', serviceId: '', templateId: '' };
+  </script>
+  <script src="./env.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
