@@ -6,6 +6,11 @@
 # Generated EmailJS runtime config (created from .env.local)
 homepage/env.js
 
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
 # OS / editor
 .DS_Store
 Thumbs.db
