@@ -89,15 +89,27 @@ def load_existing_order(path: Path = OUT) -> tuple[list[str], dict[str, list[str
     return cat_ids, set_order, labels
 
 
+def find_named_asset(set_dir: Path, base: str, kind: str) -> Path | None:
+    names = (
+        f"{base}_{kind}.webp",
+        f"{base}_{kind}.png",
+        f"{kind}.webp",
+        f"{kind}.png",
+    )
+    for name in names:
+        path = set_dir / name
+        if path.is_file():
+            return path
+    return None
+
+
 def scan_set_dir(set_dir: Path) -> dict | None:
     if not set_dir.is_dir():
         return None
     base = set_base_name(set_dir.name)
-    preview = set_dir / f"{base}_preview.png"
-    if not preview.exists():
-        preview = set_dir / "preview.png"
-    grid = set_dir / f"{base}_grid.png"
-    if not preview.exists() and not grid.exists():
+    preview = find_named_asset(set_dir, base, "preview")
+    grid = find_named_asset(set_dir, base, "grid")
+    if not preview and not grid:
         return None
     meta = read_product_meta(set_dir)
     name = meta["productName"] or base
@@ -105,8 +117,10 @@ def scan_set_dir(set_dir: Path) -> dict | None:
         "id": set_dir.name,
         "name": name,
         "base": base,
-        "hasPreview": preview.exists(),
-        "hasGrid": grid.exists(),
+        "hasPreview": preview is not None,
+        "hasGrid": grid is not None,
+        "previewExt": preview.suffix[1:].lower() if preview else "",
+        "gridExt": grid.suffix[1:].lower() if grid else "",
         "hasProduct": meta["hasProduct"],
         "palette": meta["palette"],
     }

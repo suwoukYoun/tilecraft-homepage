@@ -45,13 +45,20 @@
     return [ASSET_ROOT, encodeURIComponent(category), encodeURIComponent(setId), 'product.json'].join('/');
   }
 
+  function previewCandidates(category, setId, base) {
+    const stem = base || setId;
+    const files = [`${stem}_preview.png`, `${stem}_preview.webp`, 'preview.png', 'preview.webp'];
+    return files.map((file) =>
+      [ASSET_ROOT, encodeURIComponent(category), encodeURIComponent(setId), encodeURIComponent(file)].join('/')
+    );
+  }
+
   function previewUrl(category, setId, base) {
-    const file = `${base || setId}_preview.png`;
-    return [ASSET_ROOT, encodeURIComponent(category), encodeURIComponent(setId), encodeURIComponent(file)].join('/');
+    return previewCandidates(category, setId, base)[0];
   }
 
   function previewFallbackUrl(category, setId) {
-    return [ASSET_ROOT, encodeURIComponent(category), encodeURIComponent(setId), 'preview.png'].join('/');
+    return previewCandidates(category, setId)[2];
   }
 
   function normalizeHex(value) {
@@ -159,6 +166,10 @@
     return assetUrl(tile.imagePath);
   }
 
+  function tileImageCss(tile) {
+    return `url("${tileImageUrl(tile)}")`;
+  }
+
   function closestTile(hex, pool) {
     const list = pool && pool.length ? pool : state.tiles;
     if (!list.length) return null;
@@ -190,7 +201,7 @@
     const size = repeatPx(tile);
     layerEl.style.setProperty('--tile-cells-x', String(size.w));
     layerEl.style.setProperty('--tile-cells-y', String(size.h));
-    layerEl.style.backgroundImage = `url("${tileImageUrl(tile)}")`;
+    layerEl.style.backgroundImage = tileImageCss(tile);
   }
 
   function paintSlot(slot) {
@@ -201,7 +212,7 @@
       slot.chipEl.classList.toggle('is-mapped', !!slot.lockedTile);
       slot.chipEl.classList.toggle('is-preview', !!slot.hoverTile);
       slot.chipEl.style.setProperty('--chip-hex', slot.hex);
-      slot.chipEl.style.setProperty('--chip-tile', tile ? `url("${tileImageUrl(tile)}")` : 'none');
+      slot.chipEl.style.setProperty('--chip-tile', tile ? tileImageCss(tile) : 'none');
       const label = tile ? `${slot.hex} · ${tile.name}` : slot.hex;
       slot.chipEl.title = label;
       slot.chipEl.setAttribute('aria-label', label);
@@ -267,7 +278,7 @@
       card.className = 'tile-card';
       if (tile.tileId === lockedId) card.classList.add('is-locked');
       if (tile.tileId === hoverId) card.classList.add('is-preview');
-      card.style.backgroundImage = `url("${tileImageUrl(tile)}")`;
+      card.style.backgroundImage = tileImageCss(tile);
       card.title = `${tile.name} · ${tileSizeCm(tile).w}cm`;
       card.setAttribute('role', 'option');
       const name = document.createElement('span');
@@ -499,9 +510,11 @@
       return false;
     }
 
-    const img =
-      (await tryLoadImage(previewUrl(category, setId, base))) ||
-      (await tryLoadImage(previewFallbackUrl(category, setId)));
+    let img = null;
+    for (const url of previewCandidates(category, setId, base)) {
+      img = await tryLoadImage(url);
+      if (img) break;
+    }
     if (!img) {
       await unload();
       return false;
@@ -609,9 +622,17 @@
     isActive: () => state.active,
   };
 
+  function scheduleIdle(fn, timeout = 2000) {
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(() => fn(), { timeout });
+      return;
+    }
+    setTimeout(fn, 1);
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
+    document.addEventListener('DOMContentLoaded', () => scheduleIdle(boot));
   } else {
-    boot();
+    scheduleIdle(boot);
   }
 })();

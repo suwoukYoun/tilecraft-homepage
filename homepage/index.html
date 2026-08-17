@@ -5,55 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tile Craft — Any Image, Any Font.</title>
   <meta name="description" content="초고속 모자이크 타일 제조 플랫폼. 어떤 이미지, 어떤 서체든 30분 시안 · 익일 배송 · 100% 환불." />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['"Instrument Serif"', 'Georgia', 'serif'],
-            sans: ['"Söhne"', '"Pretendard"', 'system-ui', 'sans-serif'],
-            mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
-          },
-          colors: {
-            craft: {
-              ink: '#0A0A0B',
-              mist: '#F4F5F7',
-              accent: '#E8E8EA',
-              line: 'rgba(255,255,255,0.18)',
-            },
-          },
-        },
-      },
-    };
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="./style.css?v=20260817c" />
+  <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
+  />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    media="print"
+    onload="this.media='all'"
+  />
+  <noscript>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  </noscript>
+  <link rel="stylesheet" href="./style.css?v=20260817g" />
 </head>
-<body class="font-sans antialiased text-white overflow-hidden select-none">
+<body>
   <!-- Liquid Background Layers -->
   <div id="bg-stage" class="bg-stage" aria-hidden="true">
     <div id="bg-origin" class="bg-layer is-active">
       <div id="tile-sim-stage" class="tile-sim-stage">
-        <img id="bg-photo" class="bg-photo" alt="" draggable="false" />
+        <img id="bg-photo" class="bg-photo" alt="" draggable="false" decoding="async" />
         <div id="tile-sim-layers" class="tile-sim-layers" aria-hidden="true"></div>
         <div id="tile-grid" class="tile-grid" aria-hidden="true"></div>
       </div>
     </div>
-    <div id="bg-flash" class="bg-layer" style="background-image: url('../assets/abstract/레드네트워크_1SET/레드네트워크_grid.png')"></div>
-    <div id="bg-tile" class="bg-layer" style="background-image: url('../assets/abstract/소프트지브라_1SET/소프트지브라_grid.png')"></div>
+    <div id="bg-flash" class="bg-layer"></div>
+    <div id="bg-tile" class="bg-layer"></div>
     <div class="bg-veil"></div>
     <div id="liquid-distort" class="liquid-distort"></div>
   </div>
 
   <!-- Header -->
-  <header class="site-header fixed top-0 left-0 right-0 z-50 pointer-events-none">
-    <a href="/" class="brand-mark pointer-events-auto group">
+  <header class="site-header">
+    <a href="/" class="brand-mark">
       <span class="brand-title">Tile Craft</span>
-      <span class="brand-subtitle uppercase">
+      <span class="brand-subtitle">
         <span class="brand-subtitle-en">The New Standard for Mosaic Tiles</span>
         <span class="brand-subtitle-ko">모자이크 타일의 새로운 기준</span>
       </span>
@@ -61,7 +55,7 @@
   </header>
 
   <!-- Fixed Navigator UI -->
-  <aside id="navigator" class="navigator pointer-events-auto" aria-label="Navigator UI">
+  <aside id="navigator" class="navigator" aria-label="Navigator UI">
     <div class="navigator-frame">
       <div class="navigator-label">
         <span class="navigator-dot"></span>
@@ -114,7 +108,7 @@
   </aside>
 
   <!-- Main Stage -->
-  <main class="relative z-10 h-dvh w-full flex flex-col items-center justify-center px-4">
+  <main class="stage-main">
     <!-- Value teaser + hover popup -->
     <div id="value-rail" class="value-rail" aria-label="Why global designers choose us">
       <div id="value-popup-panel" class="value-popup" role="tooltip">
@@ -147,7 +141,7 @@
             <span class="dropzone-lead">[ Any Image, Any Script to Mosaic. ]</span>
             <span class="dropzone-action dropzone-action-ko">어떤 이미지, 세계 모든 언어의 문자까지<br />10mm 모자이크 타일로 완벽 구현</span>
           </p>
-          <p class="dropzone-hint font-mono">DROP IMAGE - JPG / PNG / WEBP</p>
+          <p class="dropzone-hint">DROP IMAGE - JPG / PNG / WEBP</p>
         </div>
       </div>
       <input id="file-input" type="file" accept="image/*" class="sr-only" />
@@ -159,7 +153,7 @@
     <!-- Process status -->
     <div id="process-status" class="process-status" aria-live="polite">
       <span class="process-bar"></span>
-      <span id="process-text" class="font-mono">AI TILE COMPUTE</span>
+      <span id="process-text" class="process-text">AI TILE COMPUTE</span>
     </div>
   </main>
 
@@ -268,12 +262,11 @@
 
   <div id="launch-toast" class="launch-toast" role="status" aria-live="polite" hidden></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
     window.__EMAILJS__ = window.__EMAILJS__ || { publicKey: '', serviceId: '', templateId: '' };
   </script>
-  <script src="./env.js"></script>
-  <script src="./main.js?v=20260817c"></script>
-  <script src="./script.js?v=20260817f"></script>
+  <script src="./env.js" defer></script>
+  <script src="./main.js?v=20260817g" defer></script>
+  <script src="./script.js?v=20260817g" defer></script>
 </body>
 </html>

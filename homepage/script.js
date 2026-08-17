@@ -8,12 +8,12 @@
   'use strict';
 
   const ASSET_ROOT = '../assets';
+  const IMAGE_EXTS = ['webp', 'png'];
   let CATEGORIES = [];
 
-  const pairPath = (category, setId, kind, baseName) => {
+  const pairPath = (category, setId, kind, baseName, ext = 'webp') => {
     const base = baseName || setId.replace(/_1SET$/, '');
-    const file = `${base}_${kind}.png`;
-    // Encode each segment so Korean folder/file names resolve reliably
+    const file = `${base}_${kind}.${ext}`;
     return [
       ASSET_ROOT,
       encodeURIComponent(category),
@@ -21,6 +21,35 @@
       encodeURIComponent(file),
     ].join('/');
   };
+
+  function assetCandidates(category, setId, kind) {
+    const meta = findSetMeta(category, setId);
+    const base = meta?.base || setId.replace(/_1SET$/, '');
+    const altKind = kind === 'grid' ? 'preview' : 'grid';
+    const kindExt = String(
+      kind === 'grid' ? meta?.gridExt || meta?.previewExt : meta?.previewExt || meta?.gridExt
+    ).toLowerCase();
+    const extOrder = kindExt === 'webp' ? IMAGE_EXTS : ['png', 'webp'];
+    const urls = [];
+    const seen = new Set();
+    const push = (url) => {
+      if (url && !seen.has(url)) {
+        seen.add(url);
+        urls.push(url);
+      }
+    };
+    for (const k of [kind, altKind]) {
+      for (const ext of extOrder) {
+        push(pairPath(category, setId, k, base, ext));
+      }
+    }
+    for (const ext of extOrder) {
+      push(
+        [ASSET_ROOT, encodeURIComponent(category), encodeURIComponent(setId), `preview.${ext}`].join('/')
+      );
+    }
+    return urls;
+  }
 
   const urlCache = new Map();
 
@@ -66,16 +95,13 @@
     const key = `${category}:${setId}:${kind}`;
     if (urlCache.has(key)) return urlCache.get(key);
 
-    const meta = findSetMeta(category, setId);
-    const base = meta?.base || setId.replace(/_1SET$/, '');
-    const primary = pairPath(category, setId, kind, base);
-    const altKind = kind === 'grid' ? 'preview' : 'grid';
-    const alternate = pairPath(category, setId, altKind, base);
-
-    let url = await tryLoadUrl(primary);
-    if (!url) url = await tryLoadUrl(alternate);
+    let url = null;
+    for (const candidate of assetCandidates(category, setId, kind)) {
+      url = await tryLoadUrl(candidate);
+      if (url) break;
+    }
     if (!url) {
-      console.warn('[Tile Craft] missing asset', primary);
+      console.warn('[Tile Craft] missing asset', pairPath(category, setId, kind));
     }
 
     urlCache.set(key, url);
@@ -108,6 +134,8 @@
                 base: s.base || s.id.replace(/_1SET$/, ''),
                 hasPreview: !!s.hasPreview,
                 hasGrid: !!s.hasGrid,
+                previewExt: String(s.previewExt || ''),
+                gridExt: String(s.gridExt || ''),
                 hasProduct: !!s.hasProduct,
                 palette: Array.isArray(s.palette) ? s.palette : [],
               })),
@@ -322,7 +350,21 @@
     return catalogRefresh;
   }
 
-  async function renderSetGrid() {
+  function bindThumbFallbacks(img, urls) {
+    let i = 0;
+    img.addEventListener('error', () => {
+      i += 1;
+      if (i < urls.length) {
+        img.src = urls[i];
+        return;
+      }
+      img.remove();
+      img.closest('.nav-cell')?.classList.add('is-missing');
+    });
+    if (urls[0]) img.src = urls[0];
+  }
+
+  function renderSetGrid() {
     const renderId = ++gridRenderGen;
     const catId = activeCategoryId;
     const sets = getSets(catId);
@@ -335,12 +377,16 @@
       cell.title = set.name;
       cell.setAttribute('aria-label', set.name);
       cell.dataset.setId = set.id;
-      const thumb = await resolveAsset(catId, set.id, 'preview');
-      if (renderId !== gridRenderGen) return;
-      if (thumb) {
-        cell.style.backgroundImage = `url("${thumb}")`;
-        cell.style.backgroundSize = 'cover';
-        cell.style.backgroundPosition = 'center';
+      const urls = assetCandidates(catId, set.id, set.hasPreview === false ? 'grid' : 'preview');
+      if (urls.length) {
+        const img = document.createElement('img');
+        img.className = 'nav-cell-img';
+        img.alt = '';
+        img.draggable = false;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        bindThumbFallbacks(img, urls);
+        cell.appendChild(img);
       } else {
         cell.classList.add('is-missing');
         if (set.palette?.[0]) cell.style.backgroundColor = set.palette[0];
@@ -811,6 +857,26 @@
 
   /* ---------- Launch Modal + EmailJS ---------- */
   let toastTimer = null;
+  let emailJsLoader = null;
+
+  function ensureEmailJs() {
+    if (typeof emailjs !== 'undefined' && typeof emailjs.send === 'function') {
+      return Promise.resolve();
+    }
+    if (emailJsLoader) return emailJsLoader;
+    emailJsLoader = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => {
+        emailJsLoader = null;
+        reject(new Error('EmailJS SDK failed to load'));
+      };
+      document.head.appendChild(script);
+    });
+    return emailJsLoader;
+  }
 
   function getEmailJsConfig() {
     const cfg = window.__EMAILJS__ || {};
@@ -845,6 +911,7 @@
     launchModal.hidden = false;
     launchModal.setAttribute('aria-hidden', 'false');
     body.classList.add('is-modal-open');
+    ensureEmailJs().catch(() => {});
     const closeBtn = launchModal.querySelector('.launch-modal-close');
     closeBtn?.focus({ preventScroll: true });
   }
@@ -871,17 +938,16 @@
       return;
     }
 
-    if (typeof emailjs === 'undefined' || typeof emailjs.send !== 'function') {
-      showLaunchToast('EmailJS SDK failed to load. Please try again.', { error: true });
-      return;
-    }
-
     if (launchSubmit) {
       launchSubmit.disabled = true;
       launchSubmit.textContent = 'Sending…';
     }
 
     try {
+      await ensureEmailJs();
+      if (typeof emailjs === 'undefined' || typeof emailjs.send !== 'function') {
+        throw new Error('EmailJS SDK failed to load');
+      }
       emailjs.init({ publicKey });
       await emailjs.send(serviceId, templateId, {
         user_email: email,
@@ -1097,6 +1163,14 @@
     return new Promise((r) => setTimeout(r, ms));
   }
 
+  function scheduleIdle(fn, timeout = 1800) {
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(() => fn(), { timeout });
+      return;
+    }
+    setTimeout(fn, 1);
+  }
+
   /* ---------- Boot ---------- */
   async function init() {
     await loadCatalog();
@@ -1118,27 +1192,27 @@
 
     await buildNavigator();
 
-    if (boot) {
-      await selectSet(boot.category, boot.id, boot.name);
-    }
+    scheduleIdle(() => {
+      if (boot) selectSet(boot.category, boot.id, boot.name);
+    }, 1200);
 
-    // Auto-pick up new folders while the page is open
-    window.addEventListener('focus', () => {
-      urlCache.clear();
-      refreshCatalog({ keepSelection: true });
-    });
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
+    scheduleIdle(() => {
+      window.addEventListener('focus', () => {
         urlCache.clear();
         refreshCatalog({ keepSelection: true });
-      }
-    });
-    setInterval(() => {
-      refreshCatalog({ keepSelection: true });
-    }, 3000);
-
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    rafId = requestAnimationFrame(tickLiquid);
+      });
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          urlCache.clear();
+          refreshCatalog({ keepSelection: true });
+        }
+      });
+      setInterval(() => {
+        refreshCatalog({ keepSelection: true });
+      }, 3000);
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+      rafId = requestAnimationFrame(tickLiquid);
+    }, 2200);
   }
 
   if (document.readyState === 'loading') {
