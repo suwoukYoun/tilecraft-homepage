@@ -1,7 +1,7 @@
 /**
  * Tile Craft — First Fold Interactions
  * Liquid mouse background · Gravity dropzone · AI compute narrative
- * Categories/sets auto-loaded from catalog.json (folder scan)
+ * Categories/sets loaded from catalog.json — array order is nav order (no folder-name sort)
  */
 
 (() => {
@@ -24,58 +24,28 @@
 
   const urlCache = new Map();
 
-  function hashColor(str, i) {
-    let h = 0;
-    for (let c = 0; c < str.length; c++) h = (h * 31 + str.charCodeAt(c)) >>> 0;
-    const hue = (h + i * 40) % 360;
-    return `hsl(${hue} 35% ${18 + i * 22}%)`;
+  function collapseWs(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim();
   }
 
-  function makePatternDataUrl(setId, kind) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 960;
-    canvas.height = 720;
-    const ctx = canvas.getContext('2d');
-    const bg = hashColor(setId, 0);
-    const accent = hashColor(setId, 2);
-    const mid = hashColor(setId, 1);
-
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    if (kind === 'preview') {
-      for (let i = 0; i < 28; i++) {
-        ctx.beginPath();
-        const y0 = (i / 28) * canvas.height + Math.sin(i) * 20;
-        ctx.moveTo(-40, y0);
-        for (let x = 0; x <= canvas.width + 40; x += 24) {
-          const y =
-            y0 +
-            Math.sin(x * 0.012 + i * 0.55) * (38 + i * 1.2) +
-            Math.cos(x * 0.007 + i) * 18;
-          ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = i % 2 === 0 ? accent : mid;
-        ctx.globalAlpha = 0.35 + (i % 5) * 0.08;
-        ctx.lineWidth = 10 + (i % 4) * 4;
-        ctx.stroke();
+  function dedupeCatalog(cats) {
+    const out = [];
+    const seenCat = new Set();
+    for (const cat of cats) {
+      const catKey = collapseWs(cat.id);
+      if (!catKey || seenCat.has(catKey)) continue;
+      seenCat.add(catKey);
+      const seenSet = new Set();
+      const sets = [];
+      for (const set of cat.sets || []) {
+        const setKey = collapseWs(set.id);
+        if (!setKey || seenSet.has(setKey)) continue;
+        seenSet.add(setKey);
+        sets.push(set);
       }
-      ctx.globalAlpha = 1;
-    } else {
-      const cell = 14;
-      for (let y = 0; y < canvas.height; y += cell) {
-        for (let x = 0; x < canvas.width; x += cell) {
-          const n =
-            Math.sin(x * 0.04 + y * 0.03) * 0.5 +
-            Math.cos((x + y) * 0.02) * 0.5;
-          const t = (n + 1) / 2;
-          ctx.fillStyle = t > 0.55 ? accent : t > 0.33 ? mid : bg;
-          ctx.fillRect(x + 1, y + 1, cell - 2, cell - 2);
-        }
-      }
+      out.push({ ...cat, sets });
     }
-
-    return canvas.toDataURL('image/png');
+    return out;
   }
 
   function findSetMeta(category, setId) {
@@ -104,7 +74,9 @@
 
     let url = await tryLoadUrl(primary);
     if (!url) url = await tryLoadUrl(alternate);
-    if (!url) url = makePatternDataUrl(setId, kind);
+    if (!url) {
+      console.warn('[Tile Craft] missing asset', primary);
+    }
 
     urlCache.set(key, url);
     return url;
@@ -126,17 +98,21 @@
         const data = await res.json();
         const cats = Array.isArray(data) ? data : data.categories;
         if (Array.isArray(cats) && cats.length) {
-          CATEGORIES = cats.map((c) => ({
-            id: c.id,
-            label: c.label || c.id,
-            sets: (c.sets || []).map((s) => ({
-              id: s.id,
-              name: s.name || s.id.replace(/_1SET$/, ''),
-              base: s.base || s.id.replace(/_1SET$/, ''),
-              hasPreview: !!s.hasPreview,
-              hasGrid: !!s.hasGrid,
-            })),
-          }));
+          CATEGORIES = dedupeCatalog(
+            cats.map((c) => ({
+              id: c.id,
+              label: c.label || c.id,
+              sets: (c.sets || []).map((s) => ({
+                id: s.id,
+                name: s.name || s.id.replace(/_1SET$/, ''),
+                base: s.base || s.id.replace(/_1SET$/, ''),
+                hasPreview: !!s.hasPreview,
+                hasGrid: !!s.hasGrid,
+                hasProduct: !!s.hasProduct,
+                palette: Array.isArray(s.palette) ? s.palette : [],
+              })),
+            }))
+          );
           return CATEGORIES;
         }
       } catch (_) {
@@ -154,7 +130,7 @@
   }
 
   function getCategory(catId) {
-    return CATEGORIES.find((c) => c.id === catId) || CATEGORIES[0];
+    return CATEGORIES.find((c) => c.id === catId);
   }
 
   function getSets(catId) {
@@ -162,6 +138,13 @@
   }
 
   function pickBootSet() {
+    const withProduct = CATEGORIES.flatMap((c) =>
+      c.sets
+        .filter((s) => s.hasProduct || (s.palette && s.palette.length))
+        .map((s) => ({ category: c.id, ...s }))
+    )[0];
+    if (withProduct) return withProduct;
+
     const soft = CATEGORIES.flatMap((c) =>
       c.sets
         .filter((s) => s.id.includes('소프트지브라'))
@@ -202,18 +185,30 @@
   const navMinimap = document.getElementById('nav-minimap');
   const navMinimapFrame = document.getElementById('nav-minimap-frame');
   const navMinimapImg = document.getElementById('nav-minimap-img');
+  const navMinimapSim = document.getElementById('nav-minimap-sim');
   const navViewport = document.getElementById('nav-viewport');
   const navCatName = document.getElementById('nav-cat-name');
   const navSetName = document.getElementById('nav-set-name');
   const navMode = document.getElementById('nav-mode');
+  const navZoomSlider = document.getElementById('nav-zoom-slider');
+  const navZoomValue = document.getElementById('nav-zoom-value');
   const root = document.documentElement;
 
   let busy = false;
-  let activeCategoryId = 'abstract';
-  let activeSetId = '소프트지브라_1SET';
+  let activeCategoryId = '';
+  let activeSetId = '';
   let showingTile = false;
   let previewNavActive = false;
   let minimapDragging = false;
+  let gridRenderGen = 0;
+  let catalogRefresh = null;
+  let catalogRefreshQueued = false;
+  let catalogRefreshOpts = { keepSelection: true };
+
+  const ZOOM_MIN = 1;
+  const ZOOM_MAX = 10;
+  const ZOOM_DEFAULT = 2;
+  const GRID_ZOOM_MIN = 2;
 
   /* Exact camera in image-normalized space [0..1] */
   const camera = {
@@ -223,7 +218,7 @@
     focusY: 0.5,
     targetX: 0.5,
     targetY: 0.5,
-    zoom: 1.85,
+    zoom: ZOOM_DEFAULT,
     ready: false,
   };
 
@@ -246,6 +241,7 @@
     buildCategoryTabs();
     await renderSetGrid();
     bindMinimap();
+    bindZoom();
 
     const refreshBtn = document.getElementById('nav-refresh');
     if (refreshBtn) {
@@ -268,7 +264,7 @@
     });
   }
 
-  async function refreshCatalog({ keepSelection = true } = {}) {
+  async function doRefreshCatalog({ keepSelection = true } = {}) {
     const prevSig = catalogSignature();
     const prevCat = activeCategoryId;
     const prevSet = activeSetId;
@@ -305,10 +301,32 @@
     return true;
   }
 
+  async function refreshCatalog(opts = {}) {
+    catalogRefreshOpts = { keepSelection: opts.keepSelection !== false };
+    if (catalogRefresh) {
+      catalogRefreshQueued = true;
+      return catalogRefresh;
+    }
+    catalogRefresh = (async () => {
+      try {
+        let changed = false;
+        do {
+          catalogRefreshQueued = false;
+          changed = await doRefreshCatalog(catalogRefreshOpts);
+        } while (catalogRefreshQueued);
+        return changed;
+      } finally {
+        catalogRefresh = null;
+      }
+    })();
+    return catalogRefresh;
+  }
+
   async function renderSetGrid() {
-    const sets = getSets(activeCategoryId);
-    navGrid.innerHTML = '';
-    navCatName.textContent = activeCategoryId;
+    const renderId = ++gridRenderGen;
+    const catId = activeCategoryId;
+    const sets = getSets(catId);
+    const cells = [];
 
     for (const set of sets) {
       const cell = document.createElement('button');
@@ -317,13 +335,24 @@
       cell.title = set.name;
       cell.setAttribute('aria-label', set.name);
       cell.dataset.setId = set.id;
-      const thumb = await resolveAsset(activeCategoryId, set.id, 'preview');
-      cell.style.backgroundImage = `url("${thumb}")`;
-      cell.style.backgroundSize = 'cover';
-      cell.style.backgroundPosition = 'center';
-      cell.addEventListener('click', () => selectSet(activeCategoryId, set.id, set.name));
-      navGrid.appendChild(cell);
+      const thumb = await resolveAsset(catId, set.id, 'preview');
+      if (renderId !== gridRenderGen) return;
+      if (thumb) {
+        cell.style.backgroundImage = `url("${thumb}")`;
+        cell.style.backgroundSize = 'cover';
+        cell.style.backgroundPosition = 'center';
+      } else {
+        cell.classList.add('is-missing');
+        if (set.palette?.[0]) cell.style.backgroundColor = set.palette[0];
+      }
+      cell.addEventListener('click', () => selectSet(catId, set.id, set.name));
+      cells.push(cell);
     }
+
+    if (renderId !== gridRenderGen) return;
+    navGrid.replaceChildren(...cells);
+    navGrid.dataset.category = catId;
+    navCatName.textContent = catId;
   }
 
   async function selectCategory(catId) {
@@ -363,12 +392,40 @@
       el.setAttribute('aria-selected', on ? 'true' : 'false');
     });
 
-    [...navGrid.children].forEach((el) => {
-      el.classList.toggle('is-active', el.dataset.setId === setId);
-    });
+    if (navGrid.dataset.category !== categoryId) {
+      await renderSetGrid();
+    } else {
+      [...navGrid.children].forEach((el) => {
+        el.classList.toggle('is-active', el.dataset.setId === setId);
+      });
+    }
 
-    const url = await resolveAsset(categoryId, setId, 'grid');
-    await setMainImage(url);
+    const url = await resolveAsset(
+      categoryId,
+      setId,
+      metaHasPalette(categoryId, setId) ? 'preview' : 'grid'
+    );
+    if (url) await setMainImage(url);
+    await applyTileSim(categoryId, setId);
+  }
+
+  function metaHasPalette(categoryId, setId) {
+    const meta = findSetMeta(categoryId, setId);
+    return !!(meta?.hasProduct || (meta?.palette && meta.palette.length));
+  }
+
+  async function applyTileSim(categoryId, setId) {
+    if (!window.TileCraftSim) return;
+    const meta = findSetMeta(categoryId, setId);
+    await window.TileCraftSim.bindSet({
+      category: categoryId,
+      setId,
+      base: meta?.base,
+    });
+    layoutMinimapFrame();
+    if (navMode && window.TileCraftSim.isActive()) {
+      navMode.textContent = 'TILE';
+    }
   }
 
   function loadImage(url) {
@@ -381,6 +438,7 @@
   }
 
   async function setMainImage(url) {
+    if (!url) return;
     bgOrigin.classList.remove('is-active');
     bgTile.classList.remove('is-active', 'is-fadein');
     bgFlash.classList.remove('is-flash', 'is-active');
@@ -392,37 +450,72 @@
     camera.focusY = 0.5;
     camera.targetX = 0.5;
     camera.targetY = 0.5;
-    camera.zoom = 1.85;
+    camera.zoom = clampZoom(camera.zoom);
     camera.ready = true;
 
     bgPhoto.src = url;
     navMinimapImg.src = url;
     layoutMinimapFrame();
+    clampFocusToCrop();
     applyCamera();
+    syncZoomUi();
 
     requestAnimationFrame(() => bgOrigin.classList.add('is-active'));
   }
 
-  function getVisibleCrop() {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const { imgW, imgH, zoom } = camera;
+  function getStageView() {
+    return {
+      originX: 0,
+      originY: 0,
+      vw: window.innerWidth,
+      vh: window.innerHeight,
+    };
+  }
 
-    const cover = Math.max(vw / imgW, vh / imgH);
-    const scale = cover * zoom;
+  function getVisibleCrop() {
+    const { originX, originY, vw, vh } = getStageView();
+    const { imgW, imgH } = camera;
+    const z = clampZoom(camera.zoom);
+    const scale = z;
     const dispW = imgW * scale;
     const dispH = imgH * scale;
 
-    const width = Math.min(1, vw / dispW);
-    const height = Math.min(1, vh / dispH);
+    const width = Math.min(1, vw / Math.max(1, dispW));
+    const height = Math.min(1, vh / Math.max(1, dispH));
 
     const focusX = Math.max(width / 2, Math.min(1 - width / 2, camera.focusX));
     const focusY = Math.max(height / 2, Math.min(1 - height / 2, camera.focusY));
 
     const left = focusX - width / 2;
     const top = focusY - height / 2;
+    const extraX = Math.round(Math.max(0, (vw - dispW) / 2));
+    const extraY = Math.round(Math.max(0, (vh - dispH) / 2));
 
-    return { left, top, width, height, scale, focusX, focusY, vw, vh };
+    return {
+      left,
+      top,
+      width,
+      height,
+      scale,
+      z,
+      focusX,
+      focusY,
+      vw,
+      vh,
+      originX,
+      originY,
+      extraX,
+      extraY,
+      dispW,
+      dispH,
+    };
+  }
+
+  function pointerToImage(clientX, clientY, crop) {
+    return {
+      imgX: crop.left + (clientX - crop.originX - crop.extraX) / Math.max(1, crop.dispW),
+      imgY: crop.top + (clientY - crop.originY - crop.extraY) / Math.max(1, crop.dispH),
+    };
   }
 
   function clampFocusToCrop() {
@@ -440,17 +533,92 @@
     camera.focusX = crop.focusX;
     camera.focusY = crop.focusY;
 
-    const tx = -crop.left * camera.imgW * crop.scale;
-    const ty = -crop.top * camera.imgH * crop.scale;
+    const z = crop.z;
+    const leftPx = Math.round(crop.left * camera.imgW);
+    const topPx = Math.round(crop.top * camera.imgH);
+    const tx = crop.extraX - leftPx * z;
+    const ty = crop.extraY - topPx * z;
 
-    root.style.setProperty('--bg-tx', `${tx.toFixed(2)}px`);
-    root.style.setProperty('--bg-ty', `${ty.toFixed(2)}px`);
-    root.style.setProperty('--bg-scale', crop.scale.toFixed(5));
+    root.style.setProperty('--bg-tx', `${tx}px`);
+    root.style.setProperty('--bg-ty', `${ty}px`);
+    root.style.setProperty('--bg-scale', String(z));
+    root.style.setProperty('--z', String(z));
+    root.style.setProperty('--img-w', String(camera.imgW));
+    root.style.setProperty('--img-h', String(camera.imgH));
+    body.classList.toggle('is-pixel-grid', z >= GRID_ZOOM_MIN);
 
-    root.style.setProperty('--nav-vp-x', `${(crop.left * 100).toFixed(3)}%`);
-    root.style.setProperty('--nav-vp-y', `${(crop.top * 100).toFixed(3)}%`);
+    root.style.setProperty('--nav-vp-x', `${((leftPx / camera.imgW) * 100).toFixed(3)}%`);
+    root.style.setProperty('--nav-vp-y', `${((topPx / camera.imgH) * 100).toFixed(3)}%`);
     root.style.setProperty('--nav-vp-w', `${(crop.width * 100).toFixed(3)}%`);
     root.style.setProperty('--nav-vp-h', `${(crop.height * 100).toFixed(3)}%`);
+  }
+
+  function clampZoom(z) {
+    const n = Math.round(Number(z));
+    if (!Number.isFinite(n)) return ZOOM_DEFAULT;
+    return Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, n));
+  }
+
+  function syncZoomUi() {
+    const z = clampZoom(camera.zoom);
+    camera.zoom = z;
+    if (navZoomSlider) {
+      navZoomSlider.value = String(z);
+      navZoomSlider.setAttribute('aria-valuenow', String(z));
+    }
+    if (navZoomValue) navZoomValue.textContent = String(z);
+  }
+
+  function setZoom(nextZoom, { clientX, clientY } = {}) {
+    const z = clampZoom(nextZoom);
+    if (!camera.ready) {
+      camera.zoom = z;
+      syncZoomUi();
+      return;
+    }
+
+    if (Number.isFinite(clientX) && Number.isFinite(clientY)) {
+      const prev = getVisibleCrop();
+      const { imgX, imgY } = pointerToImage(clientX, clientY, prev);
+      camera.zoom = z;
+      const next = getVisibleCrop();
+      camera.focusX =
+        imgX - (clientX - next.originX - next.extraX) / Math.max(1, next.dispW) + next.width / 2;
+      camera.focusY =
+        imgY - (clientY - next.originY - next.extraY) / Math.max(1, next.dispH) + next.height / 2;
+      camera.targetX = camera.focusX;
+      camera.targetY = camera.focusY;
+    } else {
+      camera.zoom = z;
+    }
+
+    clampFocusToCrop();
+    applyCamera();
+    syncZoomUi();
+  }
+
+  function onWheelZoom(e) {
+    if (busy) return;
+    if (body.classList.contains('is-modal-open')) return;
+
+    const onZoomUi = e.target.closest?.('#nav-zoom');
+    const onChrome = e.target.closest?.('#palette-dock, #navigator, #launch-modal');
+    if (onChrome && !onZoomUi) return;
+
+    e.preventDefault();
+    const dir = e.deltaY < 0 ? 1 : -1;
+    setZoom(camera.zoom + dir, { clientX: e.clientX, clientY: e.clientY });
+  }
+
+  function bindZoom() {
+    window.addEventListener('wheel', onWheelZoom, { passive: false });
+
+    if (!navZoomSlider) return;
+    navZoomSlider.addEventListener('input', () => {
+      setZoom(Number(navZoomSlider.value));
+    });
+    navZoomSlider.addEventListener('pointerdown', (e) => e.stopPropagation());
+    syncZoomUi();
   }
 
   function layoutMinimapFrame() {
@@ -467,6 +635,14 @@
 
     navMinimapFrame.style.width = `${w.toFixed(1)}px`;
     navMinimapFrame.style.height = `${h.toFixed(1)}px`;
+    const miniScale = camera.imgW > 0 ? w / camera.imgW : 1;
+    navMinimapFrame.style.setProperty('--sim-mini-scale', miniScale.toFixed(6));
+
+    if (window.TileCraftSim) {
+      window.TileCraftSim.layoutMinimap(w, camera.imgW);
+    } else if (navMinimapSim) {
+      navMinimapSim.style.setProperty('--sim-mini-scale', miniScale.toFixed(6));
+    }
   }
 
   function panFromMinimapEvent(e) {
@@ -535,10 +711,11 @@
 
   function onPointerMove(e) {
     if (minimapDragging) return;
+    if (e.target.closest?.('#palette-dock, #navigator, #launch-modal')) return;
 
     const now = performance.now();
-    const nx = e.clientX / window.innerWidth;
-    const ny = e.clientY / window.innerHeight;
+    const nx = window.innerWidth > 0 ? e.clientX / window.innerWidth : 0.5;
+    const ny = window.innerHeight > 0 ? e.clientY / window.innerHeight : 0.5;
 
     liquid.tx = nx;
     liquid.ty = ny;
@@ -588,11 +765,8 @@
       const ease = 0.08;
       camera.focusX += (camera.targetX - camera.focusX) * ease;
       camera.focusY += (camera.targetY - camera.focusY) * ease;
-      // brief intensity zoom kick on fast mouse move
-      camera.zoom = 1.85 * scaleBoost;
       applyCamera();
     } else if (navModeOn && camera.ready && minimapDragging) {
-      camera.zoom = 1.85;
       applyCamera();
     }
 
@@ -855,13 +1029,15 @@
 
     const flashUrl = red
       ? await resolveAsset(red.category, red.id, 'grid')
-      : await resolveAsset(soft.category, soft.id, 'grid');
+      : soft
+        ? await resolveAsset(soft.category, soft.id, 'grid')
+        : null;
     const tileUrl = soft
       ? await resolveAsset(soft.category, soft.id, 'grid')
       : flashUrl;
 
     // 1) Flash: 레드네트워크 tile — 1s
-    bgFlash.style.backgroundImage = `url("${flashUrl}")`;
+    if (flashUrl) bgFlash.style.backgroundImage = `url("${flashUrl}")`;
     bgFlash.classList.remove('is-flash');
     void bgFlash.offsetWidth;
     bgFlash.classList.add('is-flash');
@@ -873,7 +1049,7 @@
 
     // 2) Fade-in narrative on tile layer, then lock camera to exact grid crop
     bgOrigin.classList.remove('is-active');
-    bgTile.style.backgroundImage = `url("${tileUrl}")`;
+    if (tileUrl) bgTile.style.backgroundImage = `url("${tileUrl}")`;
     bgTile.classList.remove('is-fadein', 'is-active');
     void bgTile.offsetWidth;
     bgTile.classList.add('is-fadein');
@@ -905,7 +1081,8 @@
 
     bgTile.classList.remove('is-fadein');
     bgTile.classList.remove('is-active');
-    await setMainImage(tileUrl);
+    if (tileUrl) await setMainImage(tileUrl);
+    await applyTileSim(activeCategoryId, activeSetId);
 
     body.classList.remove('is-computing');
     body.classList.add('is-complete');
@@ -930,9 +1107,17 @@
       console.warn('[Tile Craft] No categories found. Run: python homepage/generate_catalog.py');
     }
 
+    const boot = pickBootSet();
+    if (boot) {
+      activeCategoryId = boot.category;
+      activeSetId = boot.id;
+    } else {
+      activeCategoryId = CATEGORIES[0]?.id || '';
+      activeSetId = CATEGORIES[0]?.sets?.[0]?.id || '';
+    }
+
     await buildNavigator();
 
-    const boot = pickBootSet();
     if (boot) {
       await selectSet(boot.category, boot.id, boot.name);
     }

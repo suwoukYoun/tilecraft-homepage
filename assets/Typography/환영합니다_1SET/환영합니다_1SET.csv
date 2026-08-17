@@ -1,9 +1,0 @@
-﻿# pixelcraft_order_export_v2
-# merge_similar_colors=false
-# delta_e_threshold=3
-# spare_percent=0
-# project=환영합니다
-color_hex,slot_name,unit_weight_g,tile_count,order_count,total_weight_g,tile_size_mm,product_number,notes
-#FFFFFF,,,8663,8663,,10.0,,팔레트 미등록
-#000000,,,2863,2863,,10.0,,팔레트 미등록
-TOTAL,,,11526,11526,,,,

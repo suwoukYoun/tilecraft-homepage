@@ -1,200 +1,552 @@
 {
-  "generatedAt": "2026-08-02T21:50:19",
+  "generatedAt": "2026-08-17T13:03:57",
   "assetRoot": "../assets",
   "categories": [
     {
-      "id": "abstract",
-      "label": "abstract",
+      "id": "ABSTRACT(추상화  옵아트)",
+      "label": "ABSTRACT(추상화  옵아트)",
       "sets": [
         {
-          "id": "zebra_swirl_1SET",
-          "name": "zebra_swirl",
-          "base": "zebra_swirl",
+          "id": "Amber_Breeze_(앰버_브리즈)",
+          "name": "Amber_Breeze_(앰버_브리즈)",
+          "base": "Amber_Breeze_(앰버_브리즈)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF",
+            "#00007F",
+            "#AA0000",
+            "#FFFF00",
+            "#005500"
+          ]
         },
         {
-          "id": "도시옵아트_1SET",
-          "name": "도시옵아트",
-          "base": "도시옵아트",
+          "id": "BAUHAUS_GRID(정제된_미학)",
+          "name": "BAUHAUS_GRID(정제된_미학)",
+          "base": "BAUHAUS_GRID(정제된_미학)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF",
+            "#FFFF00",
+            "#00007F",
+            "#AA0000",
+            "#005500"
+          ]
         },
         {
-          "id": "도시의_흉터_1SET",
-          "name": "도시의_흉터",
-          "base": "도시의_흉터",
+          "id": "Indigo_Flow_Vertical_Pillar(깊은_선율의_궤적)",
+          "name": "Indigo_Flow_Vertical_Pillar(깊은_선율의_궤적)",
+          "base": "Indigo_Flow_Vertical_Pillar(깊은_선율의_궤적)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#00007F",
+            "#000000"
+          ]
         },
         {
-          "id": "레드네트워크_1SET",
-          "name": "레드네트워크",
-          "base": "레드네트워크",
+          "id": "INDIGO_HORIZON_Ed.3(선명한_경계)",
+          "name": "INDIGO_HORIZON_Ed.3(선명한_경계)",
+          "base": "INDIGO_HORIZON_Ed.3(선명한_경계)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000",
+            "#00007F"
+          ]
         },
         {
-          "id": "레드블루스플래시_1SET",
-          "name": "레드블루스플래시",
-          "base": "레드블루스플래시",
+          "id": "Ink_Splatter_Black_&_Cream(검은_파동)",
+          "name": "Ink_Splatter_Black_&_Cream(검은_파동)",
+          "base": "Ink_Splatter_Black_&_Cream(검은_파동)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
         },
         {
-          "id": "소프트지브라_1SET",
-          "name": "소프트지브라",
-          "base": "소프트지브라",
+          "id": "nk_Gradation(안개_낀_새벽)",
+          "name": "nk_Gradation(안개_낀_새벽)",
+          "base": "nk_Gradation(안개_낀_새벽)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
         },
         {
-          "id": "에메랄드스카이라인_1SET",
-          "name": "에메랄드스카이라인",
-          "base": "에메랄드스카이라인",
+          "id": "Splatter_Impulse(흩뿌려진_본능)",
+          "name": "Splatter_Impulse(흩뿌려진_본능)",
+          "base": "Splatter_Impulse(흩뿌려진_본능)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#AA0000",
+            "#FFFFFF",
+            "#000000",
+            "#00007F",
+            "#00AA00",
+            "#FFFF00"
+          ]
         },
         {
-          "id": "오렌지그런지숲_1SET",
-          "name": "오렌지그런지숲",
-          "base": "오렌지그런지숲",
+          "id": "URBAN_FRAGMENTS(도시의_파편들)",
+          "name": "URBAN_FRAGMENTS(도시의_파편들)",
+          "base": "URBAN_FRAGMENTS(도시의_파편들)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000",
+            "#AA0000",
+            "#00AA00",
+            "#FFFF00",
+            "#00007F"
+          ]
         },
         {
-          "id": "오렌지스플래터웹_1SET",
-          "name": "오렌지스플래터웹",
-          "base": "오렌지스플래터웹",
+          "id": "URBAN_TWILIGHT(도시의_황혼)",
+          "name": "URBAN_TWILIGHT(도시의_황혼)",
+          "base": "URBAN_TWILIGHT(도시의_황혼)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF",
+            "#AA0000",
+            "#00007F",
+            "#00AA00",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "Vivid_Splash(비비드_스플래시)",
+          "name": "Vivid_Splash(비비드_스플래시)",
+          "base": "Vivid_Splash(비비드_스플래시)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#FFFFFF",
+            "#AA0000",
+            "#FFFF00",
+            "#000000",
+            "#00AA00"
+          ]
+        },
+        {
+          "id": "Illusion_Vortex_(무한의_소용돌이)",
+          "name": "Illusion_Vortex_(무한의_소용돌이)",
+          "base": "Illusion_Vortex_(무한의_소용돌이)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
+        },
+        {
+          "id": "INFINITE_MATRIX_Ed.2(착시의_궤적)",
+          "name": "INFINITE_MATRIX_Ed.2(착시의_궤적)",
+          "base": "INFINITE_MATRIX_Ed.2(착시의_궤적)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
         }
       ]
     },
     {
-      "id": "ART",
-      "label": "ART",
+      "id": "MASTERPIECE(명화 동양화)",
+      "label": "MASTERPIECE(명화 동양화)",
       "sets": [
         {
-          "id": "연꽃그런지아트_1SET",
-          "name": "연꽃그런지아트",
-          "base": "연꽃그런지아트",
+          "id": "BEYOND_THE_MIST_(안개_속의_여정)",
+          "name": "BEYOND_THE_MIST_(안개_속의_여정)",
+          "base": "BEYOND_THE_MIST_(안개_속의_여정)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#AA0000",
+            "#00007F",
+            "#000000",
+            "#005500",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "CRIMSON_ECHO(붉은_대지의_메아리)",
+          "name": "CRIMSON_ECHO(붉은_대지의_메아리)",
+          "base": "CRIMSON_ECHO(붉은_대지의_메아리)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#AA0000",
+            "#FFFFFF",
+            "#000000",
+            "#005500",
+            "#00007F"
+          ]
+        },
+        {
+          "id": "ECHO_OF_INK(먹의_울림_운해의_서사)",
+          "name": "ECHO_OF_INK(먹의_울림_운해의_서사)",
+          "base": "ECHO_OF_INK(먹의_울림_운해의_서사)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#005500",
+            "#00007F",
+            "#AA0000",
+            "#000000",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "ETERNAL_RIDGE(영원의_능선)",
+          "name": "ETERNAL_RIDGE(영원의_능선)",
+          "base": "ETERNAL_RIDGE(영원의_능선)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#005500",
+            "#000000",
+            "#00007F",
+            "#FFFF00",
+            "#AA0000"
+          ]
+        },
+        {
+          "id": "GOLDEN_IMPERIAL(황금빛_제국의_비상)",
+          "name": "GOLDEN_IMPERIAL(황금빛_제국의_비상)",
+          "base": "GOLDEN_IMPERIAL(황금빛_제국의_비상)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFF00",
+            "#AA0000",
+            "#000000",
+            "#FFFFFF",
+            "#005500",
+            "#00007F"
+          ]
+        },
+        {
+          "id": "GOLDEN_SOLITUDE(황금빛_고독_호숫가의_사색)",
+          "name": "GOLDEN_SOLITUDE(황금빛_고독_호숫가의_사색)",
+          "base": "GOLDEN_SOLITUDE(황금빛_고독_호숫가의_사색)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFF00",
+            "#005500",
+            "#AA0000",
+            "#000000",
+            "#FFFFFF",
+            "#00007F"
+          ]
+        },
+        {
+          "id": "GOLDEN_SURGE(황금빛_파도의_포효)",
+          "name": "GOLDEN_SURGE(황금빛_파도의_포효)",
+          "base": "GOLDEN_SURGE(황금빛_파도의_포효)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#00007F",
+            "#000000",
+            "#FFFF00",
+            "#005500",
+            "#AA0000"
+          ]
+        },
+        {
+          "id": "OCEAN_ROAR(대양의_포효_은하의_물결)",
+          "name": "OCEAN_ROAR(대양의_포효_은하의_물결)",
+          "base": "OCEAN_ROAR(대양의_포효_은하의_물결)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#00007F",
+            "#000000",
+            "#005500",
+            "#AA0000",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "SILENT_CANYON(침묵의_협곡)",
+          "name": "SILENT_CANYON(침묵의_협곡)",
+          "base": "SILENT_CANYON(침묵의_협곡)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#005500",
+            "#00007F",
+            "#AA0000",
+            "#FFFF00",
+            "#000000"
+          ]
+        },
+        {
+          "id": "SILENT_PINE(여백의_서사)",
+          "name": "SILENT_PINE(여백의_서사)",
+          "base": "SILENT_PINE(여백의_서사)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000",
+            "#005500",
+            "#00007F",
+            "#AA0000"
+          ]
+        },
+        {
+          "id": "TIMELESS_INK(산수의_정수)",
+          "name": "TIMELESS_INK(산수의_정수)",
+          "base": "TIMELESS_INK(산수의_정수)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
+        },
+        {
+          "id": "WATER_LOTUS(수련_기억의_레이어)",
+          "name": "WATER_LOTUS(수련_기억의_레이어)",
+          "base": "WATER_LOTUS(수련_기억의_레이어)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#005500",
+            "#000000",
+            "#00007F",
+            "#FFFF00",
+            "#AA0000"
+          ]
         }
       ]
     },
     {
-      "id": "masterpiece",
-      "label": "masterpiece",
+      "id": "POP & GRAPHIC (팝아트 일러스트)",
+      "label": "POP & GRAPHIC (팝아트 일러스트)",
       "sets": [
         {
-          "id": "키스_1SET",
-          "name": "키스",
-          "base": "키스",
+          "id": "Behind_the_Colors(컬러_뒤의_시선)",
+          "name": "Behind_the_Colors(컬러_뒤의_시선)",
+          "base": "Behind_the_Colors(컬러_뒤의_시선)",
           "hasPreview": true,
-          "hasGrid": true
-        }
-      ]
-    },
-    {
-      "id": "oriental",
-      "label": "oriental",
-      "sets": [
-        {
-          "id": "산수화(한국형)_1SET",
-          "name": "산수화(한국형)",
-          "base": "산수화(한국형)",
-          "hasPreview": true,
-          "hasGrid": true
-        }
-      ]
-    },
-    {
-      "id": "POP",
-      "label": "POP",
-      "sets": [
-        {
-          "id": "블랙잉크버스트_1SET",
-          "name": "블랙잉크버스트",
-          "base": "블랙잉크버스트",
-          "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#AA0000",
+            "#FFFF00",
+            "#FFFFFF",
+            "#00007F",
+            "#00AA00"
+          ]
         },
         {
-          "id": "블루_아웃_1SET",
-          "name": "블루_아웃",
-          "base": "블루_아웃",
+          "id": "Caffeine_Contrast(카페인의_대조)",
+          "name": "Caffeine_Contrast(카페인의_대조)",
+          "base": "Caffeine_Contrast(카페인의_대조)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#AA0000",
+            "#FFFFFF",
+            "#000000",
+            "#FFFF00"
+          ]
         },
         {
-          "id": "사이버사이보그파편_1SET",
-          "name": "사이버사이보그파편",
-          "base": "사이버사이보그파편",
+          "id": "Crimson_Wingbeat(진홍빛_날갯짓)",
+          "name": "Crimson_Wingbeat(진홍빛_날갯짓)",
+          "base": "Crimson_Wingbeat(진홍빛_날갯짓)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#AA0000",
+            "#FFFFFF",
+            "#00007F",
+            "#00AA00"
+          ]
         },
         {
-          "id": "사이버연인파편_1SET",
-          "name": "사이버연인파편",
-          "base": "사이버연인파편",
+          "id": "Fragrant_Protest(향기로운_저항)",
+          "name": "Fragrant_Protest(향기로운_저항)",
+          "base": "Fragrant_Protest(향기로운_저항)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000",
+            "#AA0000",
+            "#00AA00",
+            "#FFFF00",
+            "#00007F"
+          ]
         },
         {
-          "id": "폭포_1SET",
-          "name": "폭포",
-          "base": "폭포",
+          "id": "Gravity_Defied(중력을_거스르는_자)",
+          "name": "Gravity_Defied(중력을_거스르는_자)",
+          "base": "Gravity_Defied(중력을_거스르는_자)",
           "hasPreview": true,
-          "hasGrid": true
-        }
-      ]
-    },
-    {
-      "id": "Typography",
-      "label": "Typography",
-      "sets": [
-        {
-          "id": "NotoNaskhArabic_1SET",
-          "name": "NotoNaskhArabic",
-          "base": "NotoNaskhArabic",
-          "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
         },
         {
-          "id": "NotoSansSC_1SET",
-          "name": "NotoSansSC",
-          "base": "NotoSansSC",
+          "id": "Lines_of_Silence(침묵의_선율)",
+          "name": "Lines_of_Silence(침묵의_선율)",
+          "base": "Lines_of_Silence(침묵의_선율)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
         },
         {
-          "id": "TimesNewRoman_1SET",
-          "name": "TimesNewRoman",
-          "base": "TimesNewRoman",
+          "id": "Neon_Heartbeat(_네온의_심장박동)",
+          "name": "Neon_Heartbeat(_네온의_심장박동)",
+          "base": "Neon_Heartbeat(_네온의_심장박동)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFF00",
+            "#000000",
+            "#AA0000",
+            "#FFFFFF",
+            "#00007F",
+            "#00AA00"
+          ]
         },
         {
-          "id": "환영합니다_1SET",
-          "name": "환영합니다",
-          "base": "환영합니다",
+          "id": "Path_to_the_Sun(태양으로_가는_길)",
+          "name": "Path_to_the_Sun(태양으로_가는_길)",
+          "base": "Path_to_the_Sun(태양으로_가는_길)",
           "hasPreview": true,
-          "hasGrid": true
-        }
-      ]
-    },
-    {
-      "id": "ContemporarySacredArt",
-      "label": "ContemporarySacredArt",
-      "sets": [
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000",
+            "#AA0000",
+            "#00AA00",
+            "#FFFF00",
+            "#00007F"
+          ]
+        },
         {
-          "id": "성스러운소음_1SET",
-          "name": "성스러운소음",
-          "base": "성스러운소음",
+          "id": "The_Perfect_Pour_(완벽한_드립)",
+          "name": "The_Perfect_Pour_(완벽한_드립)",
+          "base": "The_Perfect_Pour_(완벽한_드립)",
           "hasPreview": true,
-          "hasGrid": true
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
+        },
+        {
+          "id": "Vibrant_Rebellion(찬란한_반항)",
+          "name": "Vibrant_Rebellion(찬란한_반항)",
+          "base": "Vibrant_Rebellion(찬란한_반항)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000",
+            "#AA0000",
+            "#00AA00",
+            "#00007F",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "Whispering_Pages_(속삭이는_페이지들)",
+          "name": "Whispering_Pages_(속삭이는_페이지들)",
+          "base": "Whispering_Pages_(속삭이는_페이지들)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#AA0000",
+            "#FFFFFF",
+            "#000000",
+            "#FFFF00",
+            "#00AA00"
+          ]
+        },
+        {
+          "id": "Metallic_Majesty_(금속빛_위엄)",
+          "name": "Metallic_Majesty_(금속빛_위엄)",
+          "base": "Metallic_Majesty_(금속빛_위엄)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
         }
       ]
     }

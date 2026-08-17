@@ -1,9 +1,0 @@
-﻿# pixelcraft_order_export_v2
-# merge_similar_colors=false
-# delta_e_threshold=3
-# spare_percent=0
-# project=블랙잉크버스트
-color_hex,slot_name,unit_weight_g,tile_count,order_count,total_weight_g,tile_size_mm,product_number,notes
-#FFFFFF,Tile 1,,119201,119201,,10.0,,
-#000000,Tile 0,,20799,20799,,10.0,,
-TOTAL,,,140000,140000,,,,

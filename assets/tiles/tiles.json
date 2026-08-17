@@ -1,0 +1,61 @@
+{
+    "tiles": [
+        {
+            "avgColor": "#000000",
+            "category": "wall",
+            "imagePath": "tiles/wall/BLACK.png",
+            "name": "BLACK",
+            "tileId": "T_64_001"
+        },
+        {
+            "avgColor": "#FFFFFF",
+            "category": "wall",
+            "imagePath": "tiles/wall/WHITE.png",
+            "name": "WHITE",
+            "tileId": "T_64_002"
+        },
+        {
+            "avgColor": "#00007F",
+            "category": "wall",
+            "imagePath": "tiles/wall/blue.png",
+            "name": "blue",
+            "tileId": "T_64_003"
+        },
+        {
+            "avgColor": "#005500",
+            "category": "wall",
+            "imagePath": "tiles/wall/green.png",
+            "name": "green",
+            "tileId": "T_64_004"
+        },
+        {
+            "avgColor": "#AA0000",
+            "category": "wall",
+            "imagePath": "tiles/wall/red.png",
+            "name": "red",
+            "tileId": "T_64_005"
+        },
+        {
+            "avgColor": "#FFFF00",
+            "category": "wall",
+            "imagePath": "tiles/wall/yellow.png",
+            "name": "yellow",
+            "tileId": "T_64_006"
+        },
+        {
+            "avgColor": "#000000",
+            "category": "floor",
+            "imagePath": "tiles/floor/BLACK.png",
+            "name": "BLACK",
+            "tileId": "T_64_007"
+        },
+        {
+            "avgColor": "#FFFFFF",
+            "category": "floor",
+            "imagePath": "tiles/floor/WHITE.png",
+            "name": "WHITE",
+            "tileId": "T_64_008"
+        }
+    ],
+    "version": 1
+}
