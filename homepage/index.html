@@ -25,7 +25,7 @@
   <noscript>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   </noscript>
-  <link rel="stylesheet" href="./style.css?v=20260817g" />
+  <link rel="stylesheet" href="./style.css?v=20260817h" />
 </head>
 <body>
   <!-- Liquid Background Layers -->
@@ -109,17 +109,35 @@
 
   <!-- Main Stage -->
   <main class="stage-main">
-    <!-- Value teaser + hover popup -->
-    <div id="value-rail" class="value-rail" aria-label="Why global designers choose us">
-      <div id="value-popup-panel" class="value-popup" role="tooltip">
-        <p class="value-line"><span class="value-bold">Custom Design:</span><span class="value-sub">어떤 이미지나 패턴이든 실물 타일 아트웍으로 완벽 구현</span></p>
-        <p class="value-line"><span class="value-bold">30-Min Preview:</span><span class="value-sub">이미지 업로드 후 30분 이내 매칭 타일 시뮬레이션 제공</span></p>
-        <p class="value-line"><span class="value-bold">Next-Day Shipping:</span><span class="value-sub">디자인 확정 즉시 맞춤 가공 및 익일 글로벌 발송</span></p>
-        <p class="value-line"><span class="value-bold">100% Preview Match:</span><span class="value-sub">프리미엄 가공 기법으로 3D 시안 이미지와 100% 일치 보장</span></p>
+    <!-- Stage menus: About + value teaser -->
+    <div class="stage-rails">
+      <div id="about-rail" class="stage-rail" aria-label="About Us">
+        <div id="about-popup-panel" class="value-popup about-popup" role="tooltip">
+          <p class="about-kicker">Heritage</p>
+          <p class="about-en">
+            Twenty years ago, a matching algorithm was used for the Goguryeo territory mosaic at the Independence Hall of Korea. Tile Craft reopens that engine as a custom mosaic platform.
+          </p>
+          <p class="about-ko">
+            20년 전 대한민국 독립기념관 고구려 영토 모자이크에 쓰인 매칭 알고리즘을, 커스텀 타일 플랫폼으로 다시 엽니다.
+          </p>
+          <p class="about-now-en">Upload any image. Preview in 30 minutes. Ship the next day.</p>
+          <p class="about-now-ko">이미지 업로드, 30분 시안, 익일 배송.</p>
+        </div>
+        <button type="button" class="value-teaser is-static" aria-describedby="about-popup-panel">
+          [ About Us ]
+        </button>
       </div>
-      <button type="button" class="value-teaser" aria-describedby="value-popup-panel">
-        [ Why global designers choose us? ]
-      </button>
+      <div id="value-rail" class="stage-rail" aria-label="Why global designers choose us">
+        <div id="value-popup-panel" class="value-popup" role="tooltip">
+          <p class="value-line"><span class="value-bold">Custom Design:</span><span class="value-sub">어떤 이미지나 패턴이든 실물 타일 아트웍으로 완벽 구현</span></p>
+          <p class="value-line"><span class="value-bold">30-Min Preview:</span><span class="value-sub">이미지 업로드 후 30분 이내 매칭 타일 시뮬레이션 제공</span></p>
+          <p class="value-line"><span class="value-bold">Next-Day Shipping:</span><span class="value-sub">디자인 확정 즉시 맞춤 가공 및 익일 글로벌 발송</span></p>
+          <p class="value-line"><span class="value-bold">100% Preview Match:</span><span class="value-sub">프리미엄 가공 기법으로 3D 시안 이미지와 100% 일치 보장</span></p>
+        </div>
+        <button type="button" class="value-teaser" aria-describedby="value-popup-panel">
+          [ Why global designers choose us? ]
+        </button>
+      </div>
     </div>
 
     <!-- Gravity Dropzone -->

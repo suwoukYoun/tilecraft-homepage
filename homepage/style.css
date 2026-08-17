@@ -840,23 +840,31 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
   color: #fff;
 }
 
-/* ---------- Value Rail (teaser + hover popup) ---------- */
-.value-rail {
+/* ---------- Stage rails (About + value teaser) ---------- */
+.stage-rails {
   position: absolute;
   left: 1.5rem;
   bottom: 1.75rem;
   z-index: 20;
-  width: max-content;
-  max-width: min(440px, calc(100vw - 3rem));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
   pointer-events: auto;
-  cursor: pointer;
 }
 
 @media (min-width: 768px) {
-  .value-rail {
+  .stage-rails {
     left: 2.5rem;
     bottom: 2.5rem;
   }
+}
+
+.stage-rail {
+  position: relative;
+  width: max-content;
+  max-width: min(480px, calc(100vw - 3rem));
+  cursor: pointer;
 }
 
 .value-teaser {
@@ -908,8 +916,8 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
 }
 
 .value-teaser:hover,
-.value-rail:hover .value-teaser,
-.value-rail:focus-within .value-teaser {
+.stage-rail:hover .value-teaser,
+.stage-rail:focus-within .value-teaser {
   animation: none;
   opacity: 1;
   color: #ffffff;
@@ -917,9 +925,14 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
 }
 
 .value-teaser:hover::after,
-.value-rail:hover .value-teaser::after,
-.value-rail:focus-within .value-teaser::after {
+.stage-rail:hover .value-teaser::after,
+.stage-rail:focus-within .value-teaser::after {
   transform: scaleX(1);
+}
+
+.value-teaser.is-static {
+  animation: none;
+  opacity: 0.82;
 }
 
 @keyframes valueTeaserPulse {
@@ -955,8 +968,13 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
     visibility 0.35s;
 }
 
-.value-rail:hover .value-popup,
-.value-rail:focus-within .value-popup {
+.about-popup {
+  width: min(460px, calc(100vw - 3rem));
+  gap: 0.5rem;
+}
+
+.stage-rail:hover .value-popup,
+.stage-rail:focus-within .value-popup {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -1007,7 +1025,56 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
   word-break: keep-all;
 }
 
-body.is-computing .value-rail {
+.about-kicker {
+  margin: 0 0 0.1rem;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.about-en,
+.about-ko,
+.about-now-en,
+.about-now-ko {
+  margin: 0;
+  font-family:
+    'Noto Sans KR',
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  color: #fff;
+  word-break: keep-all;
+  line-height: 1.45;
+}
+
+.about-en {
+  font-size: clamp(0.78rem, 1.25vw, 0.9rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.about-ko {
+  font-size: clamp(0.76rem, 1.2vw, 0.88rem);
+  font-weight: 500;
+}
+
+.about-now-en,
+.about-now-ko {
+  font-size: clamp(0.72rem, 1.1vw, 0.82rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.about-now-en {
+  margin-top: 0.25rem;
+}
+
+body.is-computing .stage-rails {
   opacity: 0.35;
   transition: opacity 0.5s ease;
   pointer-events: none;
