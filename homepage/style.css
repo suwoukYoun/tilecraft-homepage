@@ -488,6 +488,72 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
   }
 }
 
+.about-nav {
+  position: absolute;
+  top: 4.85rem;
+  left: 1.5rem;
+  z-index: 51;
+  pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+  .about-nav {
+    top: 6.15rem;
+    left: 2.5rem;
+  }
+}
+
+.about-nav-btn {
+  appearance: none;
+  display: inline-block;
+  margin: 0;
+  padding: 0 0 0.2em;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  text-shadow:
+    1px 1px 3px rgba(0, 0, 0, 0.9),
+    0 0 8px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+}
+
+.about-nav-btn::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-top: 0.15em;
+  background: rgba(255, 255, 255, 0.85);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.about-nav:hover .about-nav-btn::after,
+.about-nav:focus-within .about-nav-btn::after,
+.about-nav-btn:hover::after {
+  transform: scaleX(1);
+}
+
+.about-nav .about-popup {
+  top: calc(100% + 0.65rem);
+  bottom: auto;
+  transform: translateY(-8px);
+}
+
+.about-nav:hover .about-popup,
+.about-nav:focus-within .about-popup {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
 /* ---------- Navigator ---------- */
 .navigator {
   position: fixed;
@@ -928,11 +994,6 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
 .stage-rail:hover .value-teaser::after,
 .stage-rail:focus-within .value-teaser::after {
   transform: scaleX(1);
-}
-
-.value-teaser.is-static {
-  animation: none;
-  opacity: 0.82;
 }
 
 @keyframes valueTeaserPulse {

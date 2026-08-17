@@ -25,7 +25,7 @@
   <noscript>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   </noscript>
-  <link rel="stylesheet" href="./style.css?v=20260817h" />
+  <link rel="stylesheet" href="./style.css?v=20260817i" />
 </head>
 <body>
   <!-- Liquid Background Layers -->
@@ -52,6 +52,22 @@
         <span class="brand-subtitle-ko">모자이크 타일의 새로운 기준</span>
       </span>
     </a>
+    <nav id="about-rail" class="about-nav" aria-label="About Us">
+      <button type="button" class="about-nav-btn" aria-describedby="about-popup-panel">
+        [ About Us ]
+      </button>
+      <div id="about-popup-panel" class="value-popup about-popup" role="tooltip">
+        <p class="about-kicker">Heritage</p>
+        <p class="about-en">
+          Twenty years ago, a matching algorithm was used for the Goguryeo territory mosaic at the Independence Hall of Korea. Tile Craft reopens that engine as a custom mosaic platform.
+        </p>
+        <p class="about-ko">
+          20년 전 대한민국 독립기념관 고구려 영토 모자이크에 쓰인 매칭 알고리즘을, 커스텀 타일 플랫폼으로 다시 엽니다.
+        </p>
+        <p class="about-now-en">Upload any image. Preview in 30 minutes. Ship the next day.</p>
+        <p class="about-now-ko">이미지 업로드, 30분 시안, 익일 배송.</p>
+      </div>
+    </nav>
   </header>
 
   <!-- Fixed Navigator UI -->
@@ -109,24 +125,8 @@
 
   <!-- Main Stage -->
   <main class="stage-main">
-    <!-- Stage menus: About + value teaser -->
+    <!-- Value teaser + hover popup -->
     <div class="stage-rails">
-      <div id="about-rail" class="stage-rail" aria-label="About Us">
-        <div id="about-popup-panel" class="value-popup about-popup" role="tooltip">
-          <p class="about-kicker">Heritage</p>
-          <p class="about-en">
-            Twenty years ago, a matching algorithm was used for the Goguryeo territory mosaic at the Independence Hall of Korea. Tile Craft reopens that engine as a custom mosaic platform.
-          </p>
-          <p class="about-ko">
-            20년 전 대한민국 독립기념관 고구려 영토 모자이크에 쓰인 매칭 알고리즘을, 커스텀 타일 플랫폼으로 다시 엽니다.
-          </p>
-          <p class="about-now-en">Upload any image. Preview in 30 minutes. Ship the next day.</p>
-          <p class="about-now-ko">이미지 업로드, 30분 시안, 익일 배송.</p>
-        </div>
-        <button type="button" class="value-teaser is-static" aria-describedby="about-popup-panel">
-          [ About Us ]
-        </button>
-      </div>
       <div id="value-rail" class="stage-rail" aria-label="Why global designers choose us">
         <div id="value-popup-panel" class="value-popup" role="tooltip">
           <p class="value-line"><span class="value-bold">Custom Design:</span><span class="value-sub">어떤 이미지나 패턴이든 실물 타일 아트웍으로 완벽 구현</span></p>
@@ -285,6 +285,6 @@
   </script>
   <script src="./env.js" defer></script>
   <script src="./main.js?v=20260817g" defer></script>
-  <script src="./script.js?v=20260817g" defer></script>
+  <script src="./script.js?v=20260817i" defer></script>
 </body>
 </html>

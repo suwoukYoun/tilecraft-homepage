@@ -648,7 +648,7 @@
     if (body.classList.contains('is-modal-open')) return;
 
     const onZoomUi = e.target.closest?.('#nav-zoom');
-    const onChrome = e.target.closest?.('#palette-dock, #navigator, #launch-modal');
+    const onChrome = e.target.closest?.('#palette-dock, #navigator, #launch-modal, #about-rail, #value-rail');
     if (onChrome && !onZoomUi) return;
 
     e.preventDefault();
@@ -757,7 +757,7 @@
 
   function onPointerMove(e) {
     if (minimapDragging) return;
-    if (e.target.closest?.('#palette-dock, #navigator, #launch-modal')) return;
+    if (e.target.closest?.('#palette-dock, #navigator, #launch-modal, #about-rail, #value-rail')) return;
 
     const now = performance.now();
     const nx = window.innerWidth > 0 ? e.clientX / window.innerWidth : 0.5;
