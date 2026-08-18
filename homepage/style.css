@@ -86,8 +86,18 @@ body {
 }
 
 @media (max-width: 767px) {
+  html,
+  body {
+    touch-action: none;
+  }
+
   .stage-main {
-    padding-bottom: var(--nav-mobile-h, 13.5rem);
+    padding-bottom: var(--nav-mobile-h, 16.25rem);
+    touch-action: none;
+  }
+
+  .bg-stage {
+    touch-action: none;
   }
 }
 
@@ -530,7 +540,7 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
 
 @media (max-width: 767px) {
   .about-nav {
-    top: 6rem;
+    display: none;
   }
 }
 
@@ -929,9 +939,13 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
   text-align: right;
 }
 
+.nav-drop {
+  display: none;
+}
+
 @media (max-width: 767px) {
   :root {
-    --nav-mobile-h: 13.5rem;
+    --nav-mobile-h: 16.25rem;
   }
 
   .navigator {
@@ -941,6 +955,7 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
     bottom: 0;
     width: 100%;
     z-index: 80;
+    touch-action: auto;
   }
 
   .navigator-frame {
@@ -950,6 +965,7 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
       "label zoom"
       "cats cats"
       "grid grid"
+      "drop drop"
       "meta meta";
     gap: 8px 12px;
     padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
@@ -999,6 +1015,7 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     scrollbar-width: thin;
+    touch-action: pan-x;
   }
 
   .nav-cat {
@@ -1024,6 +1041,7 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
     overscroll-behavior-x: contain;
     scrollbar-width: thin;
     scroll-snap-type: x proximity;
+    touch-action: pan-x;
   }
 
   .nav-cell {
@@ -1046,8 +1064,10 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
   .nav-zoom {
     grid-area: zoom;
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 2px;
     margin-top: 0;
     padding-top: 0;
     border-top: 0;
@@ -1056,10 +1076,13 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
 
   .nav-zoom-row {
     margin-bottom: 0;
-    flex-shrink: 0;
   }
 
-  .nav-zoom-label,
+  .nav-zoom-label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+
   .nav-zoom-value {
     font-size: 11px;
   }
@@ -1093,6 +1116,31 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
     grid-area: meta;
     margin-top: 0;
     font-size: 10px;
+  }
+
+  .nav-drop {
+    display: flex;
+    grid-area: drop;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .nav-drop:focus-visible {
+    outline: 1px solid rgba(255, 255, 255, 0.7);
+    outline-offset: 2px;
   }
 }
 
@@ -1397,26 +1445,7 @@ body.is-computing .stage-rails {
 
 @media (max-width: 767px) {
   .dropzone {
-    width: min(58vw, 240px);
-    min-width: 210px;
-    min-height: 180px;
-    max-height: min(36vh, 240px);
-  }
-
-  .dropzone-core {
-    padding: 0.7rem;
-  }
-
-  .dropzone-copy-wrap {
-    max-width: 11.5em;
-  }
-
-  .dropzone-action-ko {
     display: none;
-  }
-
-  .dropzone-hint {
-    margin-top: 0.55rem;
   }
 }
 
@@ -1790,7 +1819,7 @@ body.is-tile-sim .process-status {
   .process-status,
   body.is-tile-sim .process-status {
     right: 1rem;
-    bottom: calc(var(--nav-mobile-h, 13.5rem) + 0.5rem);
+    bottom: calc(var(--nav-mobile-h, 16.25rem) + 0.5rem);
   }
 }
 
@@ -2154,7 +2183,7 @@ body.is-computing .process-bar::after {
 
 @media (max-width: 767px) {
   .launch-toast {
-    bottom: calc(var(--nav-mobile-h, 13.5rem) + 0.75rem);
+    bottom: calc(var(--nav-mobile-h, 16.25rem) + 0.75rem);
   }
 }
 
@@ -2223,9 +2252,10 @@ body.is-modal-open {
     right: 0.75rem;
     left: 0.75rem;
     width: auto;
-    bottom: calc(var(--nav-mobile-h, 13.5rem) + 0.4rem);
+    bottom: calc(var(--nav-mobile-h, 16.25rem) + 0.4rem);
     z-index: 70;
     gap: 0;
+    touch-action: manipulation;
   }
 
   .palette-dock-label,

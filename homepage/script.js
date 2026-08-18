@@ -199,6 +199,7 @@
   const bgTile = document.getElementById('bg-tile');
   const dropzone = document.getElementById('dropzone');
   const fileInput = document.getElementById('file-input');
+  const navDrop = document.getElementById('nav-drop');
   const absorbStage = document.getElementById('absorb-stage');
   const processStatus = document.getElementById('process-status');
   const processText = document.getElementById('process-text');
@@ -228,6 +229,7 @@
   let showingTile = false;
   let previewNavActive = false;
   let minimapDragging = false;
+  let stageDragging = false;
   let gridRenderGen = 0;
   let catalogRefresh = null;
   let catalogRefreshQueued = false;
@@ -237,6 +239,16 @@
   const ZOOM_MAX = 10;
   const ZOOM_DEFAULT = 2;
   const GRID_ZOOM_MIN = 2;
+
+  function isMobileLayout() {
+    return window.matchMedia('(max-width: 767px)').matches;
+  }
+
+  function isStagePanIgnore(target) {
+    return !!target?.closest?.(
+      '#palette-dock, #navigator, #launch-modal, #about-rail, #value-rail, .site-header, .launch-toast'
+    );
+  }
 
   /* Exact camera in image-normalized space [0..1] */
   const camera = {
@@ -288,6 +300,7 @@
 
     window.addEventListener('resize', () => {
       layoutMinimapFrame();
+      clampFocusToCrop();
       applyCamera();
     });
   }
@@ -472,6 +485,12 @@
     if (navMode && window.TileCraftSim.isActive()) {
       navMode.textContent = 'TILE';
     }
+    if (isMobileLayout()) {
+      requestAnimationFrame(() => {
+        clampFocusToCrop();
+        applyCamera();
+      });
+    }
   }
 
   function loadImage(url) {
@@ -509,12 +528,29 @@
     requestAnimationFrame(() => bgOrigin.classList.add('is-active'));
   }
 
+  function getMobileBottomInset() {
+    if (!isMobileLayout()) return 0;
+    let top = window.innerHeight;
+    const nav = document.getElementById('navigator');
+    if (nav) {
+      const box = nav.getBoundingClientRect();
+      if (box.height > 0) top = Math.min(top, box.top);
+    }
+    const pal = document.getElementById('palette-dock');
+    if (pal && !pal.hidden) {
+      const box = pal.getBoundingClientRect();
+      if (box.height > 0) top = Math.min(top, box.top);
+    }
+    return Math.max(0, Math.round(window.innerHeight - top));
+  }
+
   function getStageView() {
+    const bottom = getMobileBottomInset();
     return {
       originX: 0,
       originY: 0,
       vw: window.innerWidth,
-      vh: window.innerHeight,
+      vh: Math.max(1, window.innerHeight - bottom),
     };
   }
 
@@ -739,6 +775,63 @@
     navMinimap.addEventListener('pointercancel', onUp);
   }
 
+  function panByScreenDelta(dx, dy) {
+    if (!camera.ready) return;
+    const z = clampZoom(camera.zoom);
+    camera.targetX -= dx / Math.max(1, camera.imgW * z);
+    camera.targetY -= dy / Math.max(1, camera.imgH * z);
+    camera.focusX = camera.targetX;
+    camera.focusY = camera.targetY;
+    clampFocusToCrop();
+    applyCamera();
+  }
+
+  function bindStageDragPan() {
+    let pointerId = null;
+    let lastX = 0;
+    let lastY = 0;
+
+    const onDown = (e) => {
+      if (!isMobileLayout()) return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      if (busy || !camera.ready || (!previewNavActive && !showingTile)) return;
+      if (body.classList.contains('is-modal-open')) return;
+      if (isStagePanIgnore(e.target)) return;
+      if (stageDragging) return;
+
+      stageDragging = true;
+      pointerId = e.pointerId;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      try {
+        e.target.setPointerCapture?.(e.pointerId);
+      } catch (_) {
+        /* capture is optional */
+      }
+    };
+
+    const onMove = (e) => {
+      if (!stageDragging || e.pointerId !== pointerId) return;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      if (!dx && !dy) return;
+      panByScreenDelta(dx, dy);
+    };
+
+    const onUp = (e) => {
+      if (e.pointerId !== pointerId) return;
+      stageDragging = false;
+      pointerId = null;
+    };
+
+    window.addEventListener('pointerdown', onDown, { passive: true });
+    window.addEventListener('pointermove', onMove, { passive: true });
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
+  }
+
   /* ---------- Liquid mouse physics + exact crop pan ---------- */
   const liquid = {
     x: 0.5,
@@ -756,7 +849,8 @@
   let rafId = 0;
 
   function onPointerMove(e) {
-    if (minimapDragging) return;
+    if (minimapDragging || stageDragging) return;
+    if (isMobileLayout()) return;
     if (e.target.closest?.('#palette-dock, #navigator, #launch-modal, #about-rail, #value-rail')) return;
 
     const now = performance.now();
@@ -807,7 +901,7 @@
     const scaleBoost = 1 + intensity * (navModeOn ? 0.008 : 0.035);
     const hue = intensity * (navModeOn ? 2 : 8);
 
-    if (navModeOn && camera.ready && !minimapDragging) {
+    if (navModeOn && camera.ready && !minimapDragging && !stageDragging) {
       const ease = 0.08;
       camera.focusX += (camera.targetX - camera.focusX) * ease;
       camera.focusY += (camera.targetY - camera.focusY) * ease;
@@ -921,7 +1015,8 @@
     launchModal.hidden = true;
     launchModal.setAttribute('aria-hidden', 'true');
     body.classList.remove('is-modal-open');
-    dropzone?.focus({ preventScroll: true });
+    const mobileDrop = navDrop && isMobileLayout();
+    (mobileDrop ? navDrop : dropzone)?.focus({ preventScroll: true });
   }
 
   async function sendLaunchFeedback() {
@@ -993,22 +1088,25 @@
     });
   }
 
+  function requestDropAction() {
+    if (!busy) openLaunchModal();
+  }
+
   dropzone.addEventListener('drop', (e) => {
     dropzone.classList.remove('is-dragover');
-    if (busy) return;
-    openLaunchModal();
+    requestDropAction();
   });
 
-  dropzone.addEventListener('click', () => {
-    if (!busy) openLaunchModal();
-  });
+  dropzone.addEventListener('click', requestDropAction);
 
   dropzone.addEventListener('keydown', (e) => {
     if ((e.key === 'Enter' || e.key === ' ') && !busy) {
       e.preventDefault();
-      openLaunchModal();
+      requestDropAction();
     }
   });
+
+  navDrop?.addEventListener('click', requestDropAction);
 
   /* ---------- Absorption + AI narrative ---------- */
   function handleImageDrop(file, clientX, clientY) {
@@ -1191,6 +1289,7 @@
     }
 
     await buildNavigator();
+    bindStageDragPan();
 
     scheduleIdle(() => {
       if (boot) selectSet(boot.category, boot.id, boot.name);
