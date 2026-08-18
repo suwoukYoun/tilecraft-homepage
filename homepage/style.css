@@ -494,6 +494,25 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
   }
 }
 
+@media (max-width: 767px) {
+  .brand-subtitle {
+    width: auto;
+    max-width: calc(100vw - 3rem);
+    white-space: normal;
+  }
+
+  .brand-subtitle-en,
+  .brand-subtitle-ko {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .brand-subtitle-ko {
+    margin-left: 0;
+    margin-top: 0.12rem;
+  }
+}
+
 .about-nav {
   position: absolute;
   top: 4.85rem;
@@ -506,6 +525,12 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
   .about-nav {
     top: 6.15rem;
     left: 2.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .about-nav {
+    top: 6rem;
   }
 }
 
@@ -1370,6 +1395,31 @@ body.is-computing .stage-rails {
   transition: transform 0.55s var(--ease-spring);
 }
 
+@media (max-width: 767px) {
+  .dropzone {
+    width: min(58vw, 240px);
+    min-width: 210px;
+    min-height: 180px;
+    max-height: min(36vh, 240px);
+  }
+
+  .dropzone-core {
+    padding: 0.7rem;
+  }
+
+  .dropzone-copy-wrap {
+    max-width: 11.5em;
+  }
+
+  .dropzone-action-ko {
+    display: none;
+  }
+
+  .dropzone-hint {
+    margin-top: 0.55rem;
+  }
+}
+
 .dropzone:focus-visible {
   outline: 1px solid rgba(255, 255, 255, 0.45);
   outline-offset: 10px;
@@ -1848,6 +1898,22 @@ body.is-computing .process-bar::after {
   font-family: 'IBM Plex Mono', ui-monospace, monospace !important;
   font-size: 11px !important;
   letter-spacing: 0.12em !important;
+}
+
+@media (max-width: 767px) {
+  #dropzone .dropzone-lead {
+    font-size: 0.82rem !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  #dropzone .dropzone-action-ko {
+    display: none !important;
+  }
+
+  #dropzone .dropzone-hint {
+    font-size: 10px !important;
+    letter-spacing: 0.1em !important;
+  }
 }
 
 /* ---------- Launch Modal ---------- */
