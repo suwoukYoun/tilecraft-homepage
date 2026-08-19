@@ -165,6 +165,15 @@ body.is-tile-sim #bg-origin {
   -ms-interpolation-mode: nearest-neighbor;
 }
 
+body.is-fit-view .tile-sim-stage,
+body.is-fit-view .tile-sim-stage *,
+body.is-fit-view .bg-photo,
+body.is-fit-view .tile-sim-layer {
+  image-rendering: auto;
+  image-rendering: high-quality;
+  -ms-interpolation-mode: bicubic;
+}
+
 .bg-photo {
   position: absolute;
   inset: 0;
@@ -830,6 +839,8 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
   letter-spacing: 0.06em;
   color: rgba(255, 255, 255, 0.88);
   font-variant-numeric: tabular-nums;
+  min-width: 2.2em;
+  text-align: right;
 }
 
 .nav-zoom-slider {

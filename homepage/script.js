@@ -230,12 +230,13 @@
   let previewNavActive = false;
   let minimapDragging = false;
   let stageDragging = false;
+  let pinchScale = null;
   let gridRenderGen = 0;
   let catalogRefresh = null;
   let catalogRefreshQueued = false;
   let catalogRefreshOpts = { keepSelection: true };
 
-  const ZOOM_MIN = 1;
+  const ZOOM_MIN = 0;
   const ZOOM_MAX = 10;
   const ZOOM_DEFAULT = 2;
   const GRID_ZOOM_MIN = 2;
@@ -554,11 +555,41 @@
     };
   }
 
+  function getFitScale() {
+    const { vw, vh } = getStageView();
+    const pad = 8;
+    const availW = Math.max(1, vw - pad * 2);
+    const availH = Math.max(1, vh - pad * 2);
+    return Math.min(availW / Math.max(1, camera.imgW), availH / Math.max(1, camera.imgH));
+  }
+
+  function isFitZoom(z = camera.zoom) {
+    return clampZoom(z) === 0;
+  }
+
+  function getZoomScale(z = camera.zoom) {
+    if (pinchScale != null) return pinchScale;
+    const level = clampZoom(z);
+    return level === 0 ? getFitScale() : level;
+  }
+
+  function clampRenderScale(scale) {
+    const n = Number(scale);
+    if (!Number.isFinite(n) || n <= 0) return getFitScale();
+    return Math.min(ZOOM_MAX, Math.max(getFitScale(), n));
+  }
+
+  function scaleToZoomLevel(scale) {
+    const fit = getFitScale();
+    if (!Number.isFinite(scale) || scale <= (fit + 1) / 2) return 0;
+    return Math.min(ZOOM_MAX, Math.max(1, Math.round(scale)));
+  }
+
   function getVisibleCrop() {
     const { originX, originY, vw, vh } = getStageView();
     const { imgW, imgH } = camera;
     const z = clampZoom(camera.zoom);
-    const scale = z;
+    const scale = getZoomScale(z);
     const dispW = imgW * scale;
     const dispH = imgH * scale;
 
@@ -615,19 +646,26 @@
     camera.focusX = crop.focusX;
     camera.focusY = crop.focusY;
 
-    const z = crop.z;
+    const scale = crop.scale;
     const leftPx = Math.round(crop.left * camera.imgW);
     const topPx = Math.round(crop.top * camera.imgH);
-    const tx = crop.extraX - leftPx * z;
-    const ty = crop.extraY - topPx * z;
+    const tx = crop.extraX - leftPx * scale;
+    const ty = crop.extraY - topPx * scale;
 
     root.style.setProperty('--bg-tx', `${tx}px`);
     root.style.setProperty('--bg-ty', `${ty}px`);
-    root.style.setProperty('--bg-scale', String(z));
-    root.style.setProperty('--z', String(z));
+    root.style.setProperty('--bg-scale', String(scale));
+    root.style.setProperty('--z', String(scale));
     root.style.setProperty('--img-w', String(camera.imgW));
     root.style.setProperty('--img-h', String(camera.imgH));
-    body.classList.toggle('is-pixel-grid', z >= GRID_ZOOM_MIN);
+    body.classList.toggle(
+      'is-pixel-grid',
+      pinchScale != null ? scale >= GRID_ZOOM_MIN : crop.z >= GRID_ZOOM_MIN
+    );
+    body.classList.toggle(
+      'is-fit-view',
+      pinchScale != null ? scale <= getFitScale() * 1.05 : crop.z === 0
+    );
 
     root.style.setProperty('--nav-vp-x', `${((leftPx / camera.imgW) * 100).toFixed(3)}%`);
     root.style.setProperty('--nav-vp-y', `${((topPx / camera.imgH) * 100).toFixed(3)}%`);
@@ -647,8 +685,9 @@
     if (navZoomSlider) {
       navZoomSlider.value = String(z);
       navZoomSlider.setAttribute('aria-valuenow', String(z));
+      navZoomSlider.setAttribute('aria-valuetext', z === 0 ? 'FIT' : String(z));
     }
-    if (navZoomValue) navZoomValue.textContent = String(z);
+    if (navZoomValue) navZoomValue.textContent = z === 0 ? 'FIT' : String(z);
   }
 
   function setZoom(nextZoom, { clientX, clientY } = {}) {
@@ -659,7 +698,13 @@
       return;
     }
 
-    if (Number.isFinite(clientX) && Number.isFinite(clientY)) {
+    if (z === 0) {
+      camera.zoom = 0;
+      camera.focusX = 0.5;
+      camera.focusY = 0.5;
+      camera.targetX = 0.5;
+      camera.targetY = 0.5;
+    } else if (Number.isFinite(clientX) && Number.isFinite(clientY)) {
       const prev = getVisibleCrop();
       const { imgX, imgY } = pointerToImage(clientX, clientY, prev);
       camera.zoom = z;
@@ -728,7 +773,7 @@
   }
 
   function panFromMinimapEvent(e) {
-    if (!camera.ready) return;
+    if (!camera.ready || isFitZoom()) return;
     const rect = navMinimapFrame.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
 
@@ -776,10 +821,10 @@
   }
 
   function panByScreenDelta(dx, dy) {
-    if (!camera.ready) return;
-    const z = clampZoom(camera.zoom);
-    camera.targetX -= dx / Math.max(1, camera.imgW * z);
-    camera.targetY -= dy / Math.max(1, camera.imgH * z);
+    if (!camera.ready || isFitZoom()) return;
+    const scale = getZoomScale();
+    camera.targetX -= dx / Math.max(1, camera.imgW * scale);
+    camera.targetY -= dy / Math.max(1, camera.imgH * scale);
     camera.focusX = camera.targetX;
     camera.focusY = camera.targetY;
     clampFocusToCrop();
@@ -787,31 +832,115 @@
   }
 
   function bindStageDragPan() {
-    let pointerId = null;
+    const pointers = new Map();
+    let panId = null;
     let lastX = 0;
     let lastY = 0;
+    let pinch = null;
+
+    const pointerList = () => [...pointers.values()];
+    const distOf = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+    const midOf = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+
+    function stageReady() {
+      return (
+        camera.ready &&
+        (previewNavActive || showingTile) &&
+        !busy &&
+        !body.classList.contains('is-modal-open')
+      );
+    }
+
+    function applyLivePinch(midX, midY, nextScale) {
+      const prev = getVisibleCrop();
+      const { imgX, imgY } = pointerToImage(midX, midY, prev);
+      pinchScale = clampRenderScale(nextScale);
+      const next = getVisibleCrop();
+      camera.focusX =
+        imgX - (midX - next.originX - next.extraX) / Math.max(1, next.dispW) + next.width / 2;
+      camera.focusY =
+        imgY - (midY - next.originY - next.extraY) / Math.max(1, next.dispH) + next.height / 2;
+      camera.targetX = camera.focusX;
+      camera.targetY = camera.focusY;
+      clampFocusToCrop();
+      applyCamera();
+      const snapped = scaleToZoomLevel(pinchScale);
+      if (navZoomSlider) {
+        navZoomSlider.value = String(snapped);
+        navZoomSlider.setAttribute('aria-valuenow', String(snapped));
+        navZoomSlider.setAttribute('aria-valuetext', snapped === 0 ? 'FIT' : String(snapped));
+      }
+      if (navZoomValue) navZoomValue.textContent = snapped === 0 ? 'FIT' : String(snapped);
+    }
+
+    function endPinch(midX, midY) {
+      if (pinchScale == null) {
+        pinch = null;
+        return;
+      }
+      const snapped = scaleToZoomLevel(pinchScale);
+      pinch = null;
+      pinchScale = null;
+      setZoom(snapped, {
+        clientX: Number.isFinite(midX) ? midX : undefined,
+        clientY: Number.isFinite(midY) ? midY : undefined,
+      });
+    }
+
+    function startPinch() {
+      const pts = pointerList();
+      if (pts.length < 2) return;
+      const dist = distOf(pts[0], pts[1]);
+      if (dist < 8) return;
+      stageDragging = true;
+      panId = null;
+      pinch = {
+        startDist: dist,
+        startScale: pinchScale != null ? pinchScale : getZoomScale(),
+      };
+    }
 
     const onDown = (e) => {
       if (!isMobileLayout()) return;
       if (e.pointerType === 'mouse' && e.button !== 0) return;
-      if (busy || !camera.ready || (!previewNavActive && !showingTile)) return;
-      if (body.classList.contains('is-modal-open')) return;
+      if (!stageReady()) return;
       if (isStagePanIgnore(e.target)) return;
-      if (stageDragging) return;
 
-      stageDragging = true;
-      pointerId = e.pointerId;
-      lastX = e.clientX;
-      lastY = e.clientY;
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       try {
         e.target.setPointerCapture?.(e.pointerId);
       } catch (_) {
         /* capture is optional */
       }
+
+      if (pointers.size >= 2) {
+        startPinch();
+        return;
+      }
+
+      if (isFitZoom() && pinchScale == null) return;
+
+      stageDragging = true;
+      panId = e.pointerId;
+      lastX = e.clientX;
+      lastY = e.clientY;
     };
 
     const onMove = (e) => {
-      if (!stageDragging || e.pointerId !== pointerId) return;
+      if (!pointers.has(e.pointerId)) return;
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      if (!pinch && pointers.size >= 2) startPinch();
+
+      if (pinch && pointers.size >= 2) {
+        const pts = pointerList();
+        const dist = distOf(pts[0], pts[1]);
+        const mid = midOf(pts[0], pts[1]);
+        applyLivePinch(mid.x, mid.y, pinch.startScale * (dist / Math.max(1, pinch.startDist)));
+        return;
+      }
+
+      if (!stageDragging || pinch || e.pointerId !== panId) return;
       const dx = e.clientX - lastX;
       const dy = e.clientY - lastY;
       lastX = e.clientX;
@@ -821,9 +950,30 @@
     };
 
     const onUp = (e) => {
-      if (e.pointerId !== pointerId) return;
-      stageDragging = false;
-      pointerId = null;
+      if (!pointers.has(e.pointerId)) {
+        if (e.pointerId === panId) {
+          stageDragging = false;
+          panId = null;
+        }
+        return;
+      }
+
+      pointers.delete(e.pointerId);
+
+      if (pinch) {
+        if (pointers.size < 2) {
+          const leftover = pointerList()[0];
+          endPinch(leftover?.x ?? e.clientX, leftover?.y ?? e.clientY);
+          stageDragging = false;
+          panId = null;
+        }
+        return;
+      }
+
+      if (e.pointerId === panId) {
+        stageDragging = false;
+        panId = null;
+      }
     };
 
     window.addEventListener('pointerdown', onDown, { passive: true });
@@ -849,7 +999,7 @@
   let rafId = 0;
 
   function onPointerMove(e) {
-    if (minimapDragging || stageDragging) return;
+    if (minimapDragging || stageDragging || pinchScale != null) return;
     if (isMobileLayout()) return;
     if (e.target.closest?.('#palette-dock, #navigator, #launch-modal, #about-rail, #value-rail')) return;
 
@@ -877,7 +1027,7 @@
 
     body.classList.add('is-liquid');
 
-    if (previewNavActive || showingTile) {
+    if ((previewNavActive || showingTile) && !isFitZoom()) {
       // Map pointer to image focus within valid crop range
       camera.targetX = nx;
       camera.targetY = ny;
@@ -901,7 +1051,7 @@
     const scaleBoost = 1 + intensity * (navModeOn ? 0.008 : 0.035);
     const hue = intensity * (navModeOn ? 2 : 8);
 
-    if (navModeOn && camera.ready && !minimapDragging && !stageDragging) {
+    if (navModeOn && camera.ready && !minimapDragging && !stageDragging && pinchScale == null && !isFitZoom()) {
       const ease = 0.08;
       camera.focusX += (camera.targetX - camera.focusX) * ease;
       camera.focusY += (camera.targetY - camera.focusY) * ease;
