@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-18T11:37:16",
+  "generatedAt": "2026-08-26T11:54:13",
   "assetRoot": "../assets",
   "categories": [
     {
@@ -786,6 +786,133 @@
             "#AA0000",
             "#FFFFFF",
             "#00007F"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MATERIAL(마블 테라조 질감 표현)",
+      "label": "MATERIAL(마블 테라조 질감 표현)",
+      "sets": [
+        {
+          "id": "Cracked_Texture(_균열의_질감)",
+          "name": "Cracked_Texture(_균열의_질감)",
+          "base": "Cracked_Texture(_균열의_질감)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#AA0000",
+            "#000000",
+            "#00AA00",
+            "#FFFFFF",
+            "#00007F",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "Crimson_Marble(_진홍빛_대리석)",
+          "name": "Crimson_Marble(_진홍빛_대리석)",
+          "base": "Crimson_Marble(_진홍빛_대리석)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#FFFFFF",
+            "#AA0000",
+            "#000000",
+            "#00AA00"
+          ]
+        },
+        {
+          "id": "Emerald_Terrazzo(에메랄드_테라조)",
+          "name": "Emerald_Terrazzo(에메랄드_테라조)",
+          "base": "Emerald_Terrazzo(에메랄드_테라조)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#00AA00",
+            "#FFFF00",
+            "#000000",
+            "#AA0000",
+            "#00007F"
+          ]
+        },
+        {
+          "id": "Midnight_Marquina(한밤의_마블)",
+          "name": "Midnight_Marquina(한밤의_마블)",
+          "base": "Midnight_Marquina(한밤의_마블)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "Rust_&_Resonance(부식의_울림)",
+          "name": "Rust_&_Resonance(부식의_울림)",
+          "base": "Rust_&_Resonance(부식의_울림)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#AA0000",
+            "#000000",
+            "#00007F",
+            "#FFFFFF",
+            "#00AA00",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "Teal_Horizon(청록빛_지평선)",
+          "name": "Teal_Horizon(청록빛_지평선)",
+          "base": "Teal_Horizon(청록빛_지평선)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000",
+            "#00AA00",
+            "#AA0000",
+            "#00007F",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "Terrazzo_Fragment(테라조의_파편)",
+          "name": "Terrazzo_Fragment(테라조의_파편)",
+          "base": "Terrazzo_Fragment(테라조의_파편)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#FFFFFF",
+            "#000000",
+            "#AA0000",
+            "#FFFF00",
+            "#00AA00"
           ]
         }
       ]
