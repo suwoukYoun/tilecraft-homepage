@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26T11:54:13",
+  "generatedAt": "2026-08-28T10:28:51",
   "assetRoot": "../assets",
   "categories": [
     {
@@ -913,6 +913,191 @@
             "#AA0000",
             "#FFFF00",
             "#00AA00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PATTERN(기하학 지브라)",
+      "label": "PATTERN(기하학 지브라)",
+      "sets": [
+        {
+          "id": "Baroque_Medallion(바로크풍의_문양)",
+          "name": "Baroque_Medallion(바로크풍의_문양)",
+          "base": "Baroque_Medallion(바로크풍의_문양)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "Chromatic_Spectrum(색채의_스펙트럼)",
+          "name": "Chromatic_Spectrum(색채의_스펙트럼)",
+          "base": "Chromatic_Spectrum(색채의_스펙트럼)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#AA0000",
+            "#00007F",
+            "#000000",
+            "#FFFFFF",
+            "#FFFF00",
+            "#00AA00"
+          ]
+        },
+        {
+          "id": "Classic_Ornament(고전의_문양)",
+          "name": "Classic_Ornament(고전의_문양)",
+          "base": "Classic_Ornament(고전의_문양)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
+        },
+        {
+          "id": "Cyber_Grid_Cube(미래의_입체_그리드)",
+          "name": "Cyber_Grid_Cube(미래의_입체_그리드)",
+          "base": "Cyber_Grid_Cube(미래의_입체_그리드)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#AA0000",
+            "#00007F",
+            "#FFFFFF",
+            "#00AA00",
+            "#000000",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "Cyber_Wave(미래의_파동)",
+          "name": "Cyber_Wave(미래의_파동)",
+          "base": "Cyber_Wave(미래의_파동)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "Digital_Crater(_가상의_화구)",
+          "name": "Digital_Crater(_가상의_화구)",
+          "base": "Digital_Crater(_가상의_화구)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "Digital_Vortex(가상의_소용돌이)",
+          "name": "Digital_Vortex(가상의_소용돌이)",
+          "base": "Digital_Vortex(가상의_소용돌이)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "Geometric_Labyrinth(_기하학적_미로)",
+          "name": "Geometric_Labyrinth(_기하학적_미로)",
+          "base": "Geometric_Labyrinth(_기하학적_미로)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "Geometric_Mandala(기하학적_만다라)",
+          "name": "Geometric_Mandala(기하학적_만다라)",
+          "base": "Geometric_Mandala(기하학적_만다라)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#FFFFFF",
+            "#AA0000",
+            "#000000",
+            "#00AA00"
+          ]
+        },
+        {
+          "id": "Monochrome_Dunes(흑백의_사구)",
+          "name": "Monochrome_Dunes(흑백의_사구)",
+          "base": "Monochrome_Dunes(흑백의_사구)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "Optical_Vortex(시각적_소용돌이)",
+          "name": "Optical_Vortex(시각적_소용돌이)",
+          "base": "Optical_Vortex(시각적_소용돌이)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
+        },
+        {
+          "id": "Rhythmic_Strokes(_리드미컬한_붓질)",
+          "name": "Rhythmic_Strokes(_리드미컬한_붓질)",
+          "base": "Rhythmic_Strokes(_리드미컬한_붓질)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
           ]
         }
       ]
