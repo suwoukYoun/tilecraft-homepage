@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-28T10:28:51",
+  "generatedAt": "2026-08-29T11:31:51",
   "assetRoot": "../assets",
   "categories": [
     {
@@ -1098,6 +1098,211 @@
           "palette": [
             "#000000",
             "#FFFFFF"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CYBER FUTURISTIC(미래지향적 디지털 아트)",
+      "label": "CYBER FUTURISTIC(미래지향적 디지털 아트)",
+      "sets": [
+        {
+          "id": "CRIMSON_GLITCH_(크림슨_글리치_깨어진_데이터)",
+          "name": "CRIMSON_GLITCH_(크림슨_글리치_깨어진_데이터)",
+          "base": "CRIMSON_GLITCH_(크림슨_글리치_깨어진_데이터)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#AA0000",
+            "#FFFFFF",
+            "#00AA00",
+            "#00007F",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "CYBER_GRID(사이버_그리드_미래의_회로)",
+          "name": "CYBER_GRID(사이버_그리드_미래의_회로)",
+          "base": "CYBER_GRID(사이버_그리드_미래의_회로)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#00007F",
+            "#AA0000",
+            "#FFFFFF",
+            "#FFFF00",
+            "#00AA00"
+          ]
+        },
+        {
+          "id": "CYBER_HORIZON(가상의_지평선)",
+          "name": "CYBER_HORIZON(가상의_지평선)",
+          "base": "CYBER_HORIZON(가상의_지평선)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#00AA00",
+            "#FFFF00",
+            "#AA0000",
+            "#FFFFFF",
+            "#00007F"
+          ]
+        },
+        {
+          "id": "CYBER_RAIN_Digital_Soul(사이버_레인_디지털_소울)",
+          "name": "CYBER_RAIN_Digital_Soul(사이버_레인_디지털_소울)",
+          "base": "CYBER_RAIN_Digital_Soul(사이버_레인_디지털_소울)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "CYBER_TWILIGHT(미래의_윤슬)",
+          "name": "CYBER_TWILIGHT(미래의_윤슬)",
+          "base": "CYBER_TWILIGHT(미래의_윤슬)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#AA0000",
+            "#FFFFFF",
+            "#000000",
+            "#00AA00"
+          ]
+        },
+        {
+          "id": "DECONSTRUCTED_MELODY(해체된_선율_파편의_앙상블)",
+          "name": "DECONSTRUCTED_MELODY(해체된_선율_파편의_앙상블)",
+          "base": "DECONSTRUCTED_MELODY(해체된_선율_파편의_앙상블)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#00AA00",
+            "#000000",
+            "#AA0000",
+            "#FFFF00",
+            "#00007F"
+          ]
+        },
+        {
+          "id": "Digital_Topography(가상의_지형도)",
+          "name": "Digital_Topography(가상의_지형도)",
+          "base": "Digital_Topography(가상의_지형도)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "GLITCH_SOUL(조각난_잔상)",
+          "name": "GLITCH_SOUL(조각난_잔상)",
+          "base": "GLITCH_SOUL(조각난_잔상)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "Green_Resonance(녹색의_공명)",
+          "name": "Green_Resonance(녹색의_공명)",
+          "base": "Green_Resonance(녹색의_공명)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#00AA00",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "INFINITE_DOTS(무한의_도트_빨려드는_파편)",
+          "name": "INFINITE_DOTS(무한의_도트_빨려드는_파편)",
+          "base": "INFINITE_DOTS(무한의_도트_빨려드는_파편)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#AA0000",
+            "#FFFFFF",
+            "#000000",
+            "#00AA00",
+            "#FFFF00",
+            "#00007F"
+          ]
+        },
+        {
+          "id": "Neon_Velocity(네온의_속도)",
+          "name": "Neon_Velocity(네온의_속도)",
+          "base": "Neon_Velocity(네온의_속도)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#FFFFFF",
+            "#AA0000",
+            "#000000",
+            "#00AA00",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "SAPPHIRE_ERUPTION(사파이어의_분출_빛의_궤적)",
+          "name": "SAPPHIRE_ERUPTION(사파이어의_분출_빛의_궤적)",
+          "base": "SAPPHIRE_ERUPTION(사파이어의_분출_빛의_궤적)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#00007F",
+            "#000000",
+            "#00AA00",
+            "#FFFF00",
+            "#AA0000"
           ]
         }
       ]
