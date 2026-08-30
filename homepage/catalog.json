@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-29T11:31:51",
+  "generatedAt": "2026-08-31T01:08:06",
   "assetRoot": "../assets",
   "categories": [
     {
@@ -1303,6 +1303,478 @@
             "#00AA00",
             "#FFFF00",
             "#AA0000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SACRED & FAITH(종교 성화 사찰 아트)",
+      "label": "SACRED & FAITH(종교 성화 사찰 아트)",
+      "sets": [
+        {
+          "id": "Compassionate_Radiance(사바의_빛)",
+          "name": "Compassionate_Radiance(사바의_빛)",
+          "base": "Compassionate_Radiance(사바의_빛)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#AA0000",
+            "#00AA00",
+            "#FFFFFF",
+            "#00007F",
+            "#000000",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "Divine_Radiance(신성한_서광)",
+          "name": "Divine_Radiance(신성한_서광)",
+          "base": "Divine_Radiance(신성한_서광)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#AA0000",
+            "#00AA00",
+            "#00007F",
+            "#FFFFFF",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "Madonna_of_Eternal_Grace(영원한_은총의_성모)",
+          "name": "Madonna_of_Eternal_Grace(영원한_은총의_성모)",
+          "base": "Madonna_of_Eternal_Grace(영원한_은총의_성모)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#AA0000",
+            "#00AA00",
+            "#00007F",
+            "#FFFFFF",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "Radiant_Agony(빛나는_고뇌)",
+          "name": "Radiant_Agony(빛나는_고뇌)",
+          "base": "Radiant_Agony(빛나는_고뇌)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
+        },
+        {
+          "id": "Sacred_Arabesque(신성한_아라베스크)",
+          "name": "Sacred_Arabesque(신성한_아라베스크)",
+          "base": "Sacred_Arabesque(신성한_아라베스크)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
+        },
+        {
+          "id": "Sacred_Calligraphy(신성한_서체)",
+          "name": "Sacred_Calligraphy(신성한_서체)",
+          "base": "Sacred_Calligraphy(신성한_서체)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "Salvator_Mundi(세상의_구원자)",
+          "name": "Salvator_Mundi(세상의_구원자)",
+          "base": "Salvator_Mundi(세상의_구원자)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#AA0000",
+            "#00AA00",
+            "#00007F",
+            "#FFFFFF",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "The_Divine_Chiaroscuro(신성한_명암의_서사)",
+          "name": "The_Divine_Chiaroscuro(신성한_명암의_서사)",
+          "base": "The_Divine_Chiaroscuro(신성한_명암의_서사)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#AA0000",
+            "#00AA00",
+            "#00007F",
+            "#FFFFFF",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "The_Sacred_Light(성스러운_빛)",
+          "name": "The_Sacred_Light(성스러운_빛)",
+          "base": "The_Sacred_Light(성스러운_빛)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#AA0000",
+            "#00AA00",
+            "#00007F",
+            "#FFFFFF",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "The_Sacred_Lotus(성스러운_연화)",
+          "name": "The_Sacred_Lotus(성스러운_연화)",
+          "base": "The_Sacred_Lotus(성스러운_연화)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#AA0000",
+            "#FFFFFF",
+            "#00AA00",
+            "#FFFF00",
+            "#000000",
+            "#00007F"
+          ]
+        },
+        {
+          "id": "The_Sacred_Passion(성스러운_수난)",
+          "name": "The_Sacred_Passion(성스러운_수난)",
+          "base": "The_Sacred_Passion(성스러운_수난)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "The_Savior’s_Gaze(구세주의_시선)",
+          "name": "The_Savior’s_Gaze(구세주의_시선)",
+          "base": "The_Savior’s_Gaze(구세주의_시선)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#AA0000",
+            "#00007F",
+            "#00AA00",
+            "#FFFFFF",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "The_Sovereign_Light(절대적인_빛)",
+          "name": "The_Sovereign_Light(절대적인_빛)",
+          "base": "The_Sovereign_Light(절대적인_빛)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000",
+            "#AA0000",
+            "#00AA00",
+            "#00007F",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "The_Timeless_Grace(시대를_초월한_은총)",
+          "name": "The_Timeless_Grace(시대를_초월한_은총)",
+          "base": "The_Timeless_Grace(시대를_초월한_은총)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#AA0000",
+            "#FFFFFF",
+            "#00AA00",
+            "#00007F",
+            "#000000",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "The_Timeless_Grace_Blue_(시대를_초월한_은총)",
+          "name": "The_Timeless_Grace_Blue_(시대를_초월한_은총)",
+          "base": "The_Timeless_Grace_Blue_(시대를_초월한_은총)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#FFFFFF"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Kids & Fantasy(키즈 & 판타지)",
+      "label": "Kids & Fantasy(키즈 & 판타지)",
+      "sets": [
+        {
+          "id": "CHAGALL’S_DREAM(샤갈의_꿈_은하수_마을)",
+          "name": "CHAGALL’S_DREAM(샤갈의_꿈_은하수_마을)",
+          "base": "CHAGALL’S_DREAM(샤갈의_꿈_은하수_마을)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#AA0000",
+            "#00007F",
+            "#FFFF00",
+            "#00AA00",
+            "#000000"
+          ]
+        },
+        {
+          "id": "COSMIC_VOYAGE(우주_항해_별빛의_신호)",
+          "name": "COSMIC_VOYAGE(우주_항해_별빛의_신호)",
+          "base": "COSMIC_VOYAGE(우주_항해_별빛의_신호)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "id": "DRAGON_GUARDIAN(용의_요새_수호의_시작)",
+          "name": "DRAGON_GUARDIAN(용의_요새_수호의_시작)",
+          "base": "DRAGON_GUARDIAN(용의_요새_수호의_시작)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000",
+            "#00007F",
+            "#AA0000",
+            "#00AA00",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "Flight_of_Fancy(_환상의_비행)",
+          "name": "Flight_of_Fancy(_환상의_비행)",
+          "base": "Flight_of_Fancy(_환상의_비행)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#00007F",
+            "#AA0000",
+            "#00AA00",
+            "#000000",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "FOREST_CONCERTO(숲의_협주곡_달빛의_멜로디)",
+          "name": "FOREST_CONCERTO(숲의_협주곡_달빛의_멜로디)",
+          "base": "FOREST_CONCERTO(숲의_협주곡_달빛의_멜로디)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#00007F",
+            "#000000",
+            "#AA0000",
+            "#00AA00",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "JUNGLE_BUDDIES(정글_버디즈_아기_공룡의_숲)",
+          "name": "JUNGLE_BUDDIES(정글_버디즈_아기_공룡의_숲)",
+          "base": "JUNGLE_BUDDIES(정글_버디즈_아기_공룡의_숲)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#00AA00",
+            "#FFFF00",
+            "#000000",
+            "#00007F",
+            "#AA0000"
+          ]
+        },
+        {
+          "id": "Mushroom_Shelter(버섯_아래의_쉼터)",
+          "name": "Mushroom_Shelter(버섯_아래의_쉼터)",
+          "base": "Mushroom_Shelter(버섯_아래의_쉼터)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#AA0000",
+            "#00AA00",
+            "#00007F",
+            "#FFFF00",
+            "#000000"
+          ]
+        },
+        {
+          "id": "SCARLET_PATH(붉은_모자의_길_신비의_숲)",
+          "name": "SCARLET_PATH(붉은_모자의_길_신비의_숲)",
+          "base": "SCARLET_PATH(붉은_모자의_길_신비의_숲)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#00007F",
+            "#FFFFFF",
+            "#00AA00",
+            "#AA0000"
+          ]
+        },
+        {
+          "id": "SKY_BALLOON(스카이_벌룬_구름_속의_요새)",
+          "name": "SKY_BALLOON(스카이_벌룬_구름_속의_요새)",
+          "base": "SKY_BALLOON(스카이_벌룬_구름_속의_요새)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#00007F",
+            "#AA0000",
+            "#FFFF00",
+            "#00AA00",
+            "#000000"
+          ]
+        },
+        {
+          "id": "STARRY_OCEAN(별빛_바다_고래의_모험)",
+          "name": "STARRY_OCEAN(별빛_바다_고래의_모험)",
+          "base": "STARRY_OCEAN(별빛_바다_고래의_모험)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#00007F",
+            "#FFFFFF",
+            "#AA0000",
+            "#00AA00",
+            "#FFFF00"
+          ]
+        },
+        {
+          "id": "STELLAR_WHALE(별빛_고래_영원의_항해)",
+          "name": "STELLAR_WHALE(별빛_고래_영원의_항해)",
+          "base": "STELLAR_WHALE(별빛_고래_영원의_항해)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#000000",
+            "#00007F",
+            "#FFFFFF",
+            "#00AA00",
+            "#AA0000"
+          ]
+        },
+        {
+          "id": "Stormborn_Citadel(폭풍이_키운_요새)",
+          "name": "Stormborn_Citadel(폭풍이_키운_요새)",
+          "base": "Stormborn_Citadel(폭풍이_키운_요새)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#AA0000",
+            "#000000",
+            "#00AA00",
+            "#FFFFFF",
+            "#FFFF00"
           ]
         }
       ]
