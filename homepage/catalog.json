@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T20:11:33",
+  "generatedAt": "2026-09-01T23:47:16",
   "assetRoot": "../assets",
   "categories": [
     {
@@ -1802,6 +1802,36 @@
           "id": "한국상용문구",
           "name": "한국상용문구",
           "base": "한국상용문구",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000",
+            "#00007F"
+          ]
+        },
+        {
+          "id": "일본상용문구",
+          "name": "일본상용문구",
+          "base": "일본상용문구",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000",
+            "#00007F"
+          ]
+        },
+        {
+          "id": "중국상용문구",
+          "name": "중국상용문구",
+          "base": "중국상용문구",
           "hasPreview": true,
           "hasGrid": false,
           "previewExt": "png",
