@@ -17,11 +17,11 @@
   --liquid-scale: 1;
   --liquid-blur: 0px;
   --liquid-hue: 0deg;
-  --bg-zoom: 2;
+  --bg-zoom: 10;
   --bg-tx: 0px;
   --bg-ty: 0px;
-  --bg-scale: 2;
-  --z: 2;
+  --bg-scale: 10;
+  --z: 10;
   --img-w: 1;
   --img-h: 1;
   --nav-vp-x: 0%;
@@ -201,6 +201,14 @@ body.is-fit-view .tile-sim-layer {
   pointer-events: none;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s var(--ease-out), visibility 0.18s;
+}
+
+body.is-tile-sim:not(.is-fit-view) .tile-sim-layers {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* Pixel grid shares the stage box + origin; cell = Z×Z CSS px */
@@ -224,14 +232,60 @@ body.is-fit-view .tile-sim-layer {
   transition: opacity 0.18s var(--ease-out), visibility 0.18s;
 }
 
+.tile-bevel {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform-origin: 0 0;
+  background-image:
+    linear-gradient(
+      to bottom,
+      transparent 0 1px,
+      rgba(255, 255, 255, 0.16) 1px 2px,
+      transparent 2px
+    ),
+    linear-gradient(
+      to right,
+      transparent 0 1px,
+      rgba(255, 255, 255, 0.1) 1px 2px,
+      transparent 2px
+    ),
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.2) 0 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to left,
+      rgba(0, 0, 0, 0.14) 0 1px,
+      transparent 1px
+    );
+  background-size: calc(var(--z, 1) * 1px) calc(var(--z, 1) * 1px);
+  background-position: 0 0;
+  background-repeat: repeat;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  transition: opacity 0.18s var(--ease-out), visibility 0.18s;
+}
+
 body.is-tile-sim.is-pixel-grid .tile-grid {
   opacity: var(--grid-opacity, 0.45);
+  visibility: visible;
+}
+
+body.is-tile-sim.is-pixel-grid .tile-bevel {
+  opacity: 1;
   visibility: visible;
 }
 
 .tile-sim-layer {
   position: absolute;
   inset: 0;
+  background-color: var(--slot-hex, transparent);
   background-repeat: repeat;
   background-position: 0 0;
   background-size:
@@ -251,7 +305,11 @@ body.is-tile-sim.is-pixel-grid .tile-grid {
   mask-mode: alpha;
 }
 
-body.is-tile-sim .bg-photo {
+body.is-tile-sim:not(.is-pixel-grid) .tile-sim-layers .tile-sim-layer {
+  background-image: none !important;
+}
+
+body.is-tile-sim:not(.is-fit-view) .bg-photo {
   visibility: hidden;
 }
 
@@ -839,7 +897,7 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
   letter-spacing: 0.06em;
   color: rgba(255, 255, 255, 0.88);
   font-variant-numeric: tabular-nums;
-  min-width: 2.2em;
+  min-width: 2.6em;
   text-align: right;
 }
 

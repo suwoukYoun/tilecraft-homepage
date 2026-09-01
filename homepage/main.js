@@ -192,8 +192,11 @@
     return slot.hoverTile || slot.lockedTile || null;
   }
 
-  function paintLayer(layerEl, tile) {
+  function paintLayer(layerEl, tile, hex) {
     if (!layerEl) return;
+    const color = hex || 'transparent';
+    layerEl.style.setProperty('--slot-hex', color);
+    layerEl.style.backgroundColor = color;
     if (!tile) {
       layerEl.style.backgroundImage = 'none';
       return;
@@ -206,8 +209,8 @@
 
   function paintSlot(slot) {
     const tile = effectiveTile(slot);
-    paintLayer(slot.layerEl, tile);
-    paintLayer(slot.miniEl, tile);
+    paintLayer(slot.layerEl, tile, slot.hex);
+    paintLayer(slot.miniEl, tile, slot.hex);
     if (slot.chipEl) {
       slot.chipEl.classList.toggle('is-mapped', !!slot.lockedTile);
       slot.chipEl.classList.toggle('is-preview', !!slot.hoverTile);

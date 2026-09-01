@@ -237,9 +237,9 @@
   let catalogRefreshOpts = { keepSelection: true };
 
   const ZOOM_MIN = 0;
-  const ZOOM_MAX = 10;
-  const ZOOM_DEFAULT = 2;
-  const GRID_ZOOM_MIN = 2;
+  const ZOOM_MAX = 15;
+  const ZOOM_DEFAULT = 10;
+  const GRID_ZOOM_MIN = 6;
 
   function isMobileLayout() {
     return window.matchMedia('(max-width: 767px)').matches;
@@ -301,6 +301,11 @@
 
     window.addEventListener('resize', () => {
       layoutMinimapFrame();
+      const z = clampZoom(camera.zoom);
+      if (z !== camera.zoom) {
+        setZoom(z);
+        return;
+      }
       clampFocusToCrop();
       applyCamera();
     });
@@ -582,7 +587,17 @@
   function scaleToZoomLevel(scale) {
     const fit = getFitScale();
     if (!Number.isFinite(scale) || scale <= (fit + 1) / 2) return 0;
-    return Math.min(ZOOM_MAX, Math.max(1, Math.round(scale)));
+    const rounded = Math.min(ZOOM_MAX, Math.max(1, Math.round(scale)));
+    if (Number.isFinite(fit) && rounded < fit) return 0;
+    return rounded;
+  }
+
+  function firstPixelZoom() {
+    if (!camera.ready) return 1;
+    const fit = getFitScale();
+    if (!Number.isFinite(fit) || fit <= 0) return 1;
+    const z = Math.max(1, Math.ceil(fit));
+    return z > ZOOM_MAX ? 0 : z;
   }
 
   function getVisibleCrop() {
@@ -676,7 +691,12 @@
   function clampZoom(z) {
     const n = Math.round(Number(z));
     if (!Number.isFinite(n)) return ZOOM_DEFAULT;
-    return Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, n));
+    if (n <= ZOOM_MIN) return 0;
+    const pixel = Math.min(ZOOM_MAX, Math.max(1, n));
+    if (!camera.ready) return pixel;
+    const fit = getFitScale();
+    if (Number.isFinite(fit) && pixel < fit) return 0;
+    return pixel;
   }
 
   function syncZoomUi() {
@@ -734,7 +754,9 @@
 
     e.preventDefault();
     const dir = e.deltaY < 0 ? 1 : -1;
-    setZoom(camera.zoom + dir, { clientX: e.clientX, clientY: e.clientY });
+    let next = camera.zoom + dir;
+    if (camera.zoom === 0 && dir > 0) next = firstPixelZoom();
+    setZoom(next, { clientX: e.clientX, clientY: e.clientY });
   }
 
   function bindZoom() {

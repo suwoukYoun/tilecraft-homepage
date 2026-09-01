@@ -25,7 +25,7 @@
   <noscript>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   </noscript>
-  <link rel="stylesheet" href="./style.css?v=20260820a" />
+  <link rel="stylesheet" href="./style.css?v=20260901b" />
 </head>
 <body>
   <!-- Liquid Background Layers -->
@@ -34,6 +34,7 @@
       <div id="tile-sim-stage" class="tile-sim-stage">
         <img id="bg-photo" class="bg-photo" alt="" draggable="false" decoding="async" />
         <div id="tile-sim-layers" class="tile-sim-layers" aria-hidden="true"></div>
+        <div id="tile-bevel" class="tile-bevel" aria-hidden="true"></div>
         <div id="tile-grid" class="tile-grid" aria-hidden="true"></div>
       </div>
     </div>
@@ -100,18 +101,18 @@
       <div class="nav-zoom" id="nav-zoom">
         <div class="nav-zoom-row">
           <label class="nav-zoom-label" for="nav-zoom-slider">ZOOM</label>
-          <span id="nav-zoom-value" class="nav-zoom-value">2</span>
+          <span id="nav-zoom-value" class="nav-zoom-value">10</span>
         </div>
         <input
           id="nav-zoom-slider"
           class="nav-zoom-slider"
           type="range"
           min="0"
-          max="10"
+          max="15"
           step="1"
-          value="2"
+          value="10"
           aria-valuemin="0"
-          aria-valuemax="10"
+          aria-valuemax="15"
           aria-label="Zoom level"
         />
       </div>
@@ -296,7 +297,7 @@
     window.__EMAILJS__ = window.__EMAILJS__ || { publicKey: '', serviceId: '', templateId: '' };
   </script>
   <script src="./env.js" defer></script>
-  <script src="./main.js?v=20260817g" defer></script>
-  <script src="./script.js?v=20260820b" defer></script>
+  <script src="./main.js?v=20260901b" defer></script>
+  <script src="./script.js?v=20260901b" defer></script>
 </body>
 </html>
