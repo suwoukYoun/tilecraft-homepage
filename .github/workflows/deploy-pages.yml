@@ -67,6 +67,7 @@ jobs:
           mkdir -p _site
           cp -r homepage assets _site/
           cp index.html _site/index.html
+          cp robots.txt sitemap.xml _site/
           # Custom domain must live at published site root
           cp homepage/CNAME _site/CNAME
 
