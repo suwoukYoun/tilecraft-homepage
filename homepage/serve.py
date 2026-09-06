@@ -13,12 +13,11 @@ import json
 import sys
 import threading
 import time
-from datetime import datetime
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
-from generate_catalog import ASSETS, OUT, scan_catalog, write_catalog
+from generate_catalog import ASSETS, OUT, write_catalog
 
 ROOT = Path(__file__).resolve().parent.parent  # QtProject/Homepage
 ENV_LOCAL = ROOT / ".env.local"
@@ -99,17 +98,8 @@ class TileCraftHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
     def _send_catalog(self):
-        cats = scan_catalog()
-        write_catalog(cats)
-        body = json.dumps(
-            {
-                "generatedAt": datetime.now().isoformat(timespec="seconds"),
-                "assetRoot": "../assets",
-                "categories": cats,
-            },
-            ensure_ascii=False,
-            indent=2,
-        ).encode("utf-8")
+        payload = write_catalog()
+        body = json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Cache-Control", "no-store, no-cache, must-revalidate")
@@ -126,6 +116,17 @@ class TileCraftHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _send_plain(self, path: Path):
+        if not path.is_file():
+            self.send_error(404, "File not found")
+            return
+        body = path.read_bytes()
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path
@@ -136,6 +137,23 @@ class TileCraftHandler(SimpleHTTPRequestHandler):
 
         if path in ("/homepage/env.js", "/env.js"):
             self._send_env_js()
+            return
+
+        if path == "/robots.txt":
+            self._send_plain(ROOT / "homepage" / "robots.txt")
+            return
+
+        if path == "/sitemap.xml":
+            sitemap = ROOT / "homepage" / "sitemap.xml"
+            if not sitemap.is_file():
+                self.send_error(404, "File not found")
+                return
+            body = sitemap.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/xml; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
             return
 
         if path in ("/", "/homepage", "/homepage/"):

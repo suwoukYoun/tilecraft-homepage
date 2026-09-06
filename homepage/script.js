@@ -1,7 +1,8 @@
 /**
  * Tile Craft — First Fold Interactions
  * Liquid mouse background · Gravity dropzone · AI compute narrative
- * Categories/sets loaded from catalog.json — array order is nav order (no folder-name sort)
+ * Categories/sets loaded from catalog.json — array order is nav order (no folder-name sort).
+ * generate_catalog.py puts ART COLLECTIONS members first; nav stays one category level.
  */
 
 (() => {

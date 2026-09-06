@@ -3,8 +3,11 @@
 
 Order rules:
 - Nav / catalog consumers use categories[] array order as written.
-- Never sort by folder name. Preserve order from the existing catalog.json;
-  newly discovered categories/sets are appended in scan encounter order.
+- Never sort by folder name.
+- ART COLLECTIONS members in category-groups.json come first (that array order).
+- category-order.json and the previous catalog.json are fallbacks.
+- Categories not in ART COLLECTIONS are appended; they are not auto-joined.
+- Empty / other groups are not written to catalog.groups.
 """
 
 from __future__ import annotations
@@ -19,7 +22,9 @@ ROOT = Path(__file__).resolve().parent
 ASSETS = ROOT.parent / "assets"
 OUT = ROOT / "catalog.json"
 ORDER_FILE = ASSETS / "category-order.json"
+GROUPS_FILE = ASSETS / "category-groups.json"
 SKIP_CAT_DIRS = {"tiles"}
+ART_GROUP_PREFIX = "ART COLLECTIONS"
 
 
 def normalize_id(name: str) -> str:
@@ -58,6 +63,78 @@ def load_category_order_file() -> list[str]:
     if not isinstance(cats, list):
         return []
     return [str(c) for c in cats if c]
+
+
+def load_group_file() -> list[dict]:
+    if not GROUPS_FILE.is_file():
+        return []
+    try:
+        data = json.loads(GROUPS_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    groups = data.get("groups") if isinstance(data, dict) else data
+    if not isinstance(groups, list):
+        return []
+    out: list[dict] = []
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        name = str(group.get("name") or "").strip()
+        cats = group.get("categories")
+        if not name or not isinstance(cats, list):
+            continue
+        out.append({"name": name, "categories": [str(c) for c in cats if c]})
+    return out
+
+
+def art_collection_members() -> tuple[str, list[str]]:
+    """Return (display name, member ids) for ART COLLECTIONS only."""
+    for group in load_group_file():
+        if normalize_id(group["name"]).upper().startswith(ART_GROUP_PREFIX):
+            return group["name"], list(group["categories"])
+    return "", []
+
+
+def skip_category_dirs() -> set[str]:
+    """Skip tiles and any on-disk folder that reuses a group name."""
+    skips = set(SKIP_CAT_DIRS)
+    for group in load_group_file():
+        name = group["name"]
+        skips.add(name)
+        skips.add(normalize_id(name))
+    return skips
+
+
+def preferred_category_ids(prev_cat_ids: list[str]) -> list[str]:
+    preferred: list[str] = []
+    _, art_members = art_collection_members()
+    for cid in art_members + load_category_order_file() + prev_cat_ids:
+        if cid and cid not in preferred:
+            preferred.append(cid)
+    return preferred
+
+
+def resolve_catalog_groups(category_ids: list[str]) -> list[dict]:
+    """Bake ART COLLECTIONS only, with members that exist in this catalog."""
+    art_name, art_members = art_collection_members()
+    if not art_name or not art_members:
+        return []
+    available_by_norm: dict[str, str] = {}
+    id_set = set(category_ids)
+    for cid in category_ids:
+        norm = normalize_id(cid)
+        if norm and norm not in available_by_norm:
+            available_by_norm[norm] = cid
+    resolved: list[str] = []
+    seen: set[str] = set()
+    for cid in art_members:
+        real = cid if cid in id_set else available_by_norm.get(normalize_id(cid))
+        if real and real not in seen:
+            resolved.append(real)
+            seen.add(real)
+    if not resolved:
+        return []
+    return [{"name": art_name, "categories": resolved}]
 
 
 def load_existing_order(path: Path = OUT) -> tuple[list[str], dict[str, list[str]], dict[str, str]]:
@@ -175,10 +252,8 @@ def scan_catalog() -> list[dict]:
         return []
 
     prev_cat_ids, prev_set_order, prev_labels = load_existing_order()
-    preferred_cats = []
-    for cid in load_category_order_file() + prev_cat_ids:
-        if cid not in preferred_cats:
-            preferred_cats.append(cid)
+    preferred_cats = preferred_category_ids(prev_cat_ids)
+    skip_dirs = skip_category_dirs()
 
     # normalized cat id -> (actual folder name, {set_id: entry})
     found: dict[str, tuple[str, dict[str, dict]]] = {}
@@ -187,7 +262,7 @@ def scan_catalog() -> list[dict]:
         if not cat_dir.is_dir():
             continue
         cat_norm = normalize_id(cat_dir.name)
-        if not cat_norm or cat_dir.name in SKIP_CAT_DIRS or cat_norm in SKIP_CAT_DIRS:
+        if not cat_norm or cat_dir.name in skip_dirs or cat_norm in skip_dirs:
             continue
         sets_by_id: dict[str, dict] = {}
         sets_by_norm: dict[str, str] = {}
@@ -238,22 +313,26 @@ def scan_catalog() -> list[dict]:
     return ordered
 
 
-def write_catalog(categories: list[dict] | None = None) -> Path:
+def write_catalog(categories: list[dict] | None = None) -> dict:
     cats = categories if categories is not None else scan_catalog()
     payload = {
         "generatedAt": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
         "assetRoot": "../assets",
+        "groups": resolve_catalog_groups([c["id"] for c in cats if c.get("id")]),
         "categories": cats,
     }
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    return OUT
+    return payload
 
 
 def main() -> int:
-    path = write_catalog()
-    cats = json.loads(path.read_text(encoding="utf-8"))["categories"]
+    payload = write_catalog()
+    cats = payload["categories"]
     total = sum(len(c["sets"]) for c in cats)
-    print(f"Wrote {path} ({len(cats)} categories, {total} sets)")
+    print(f"Wrote {OUT} ({len(cats)} categories, {total} sets)")
+    groups = payload.get("groups") or []
+    if groups:
+        print("Groups:", " · ".join(str(g.get("name") or "") for g in groups))
     print("Order:", " → ".join(c["id"] for c in cats))
     return 0
 
