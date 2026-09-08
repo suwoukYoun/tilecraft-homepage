@@ -221,6 +221,7 @@
   const navSetName = document.getElementById('nav-set-name');
   const navMode = document.getElementById('nav-mode');
   const navZoomSlider = document.getElementById('nav-zoom-slider');
+  const navZoomLabel = document.getElementById('nav-zoom-label');
   const navZoomValue = document.getElementById('nav-zoom-value');
   const root = document.documentElement;
 
@@ -700,15 +701,34 @@
     return pixel;
   }
 
-  function syncZoomUi() {
-    const z = clampZoom(camera.zoom);
-    camera.zoom = z;
+  function zoomModeName(z) {
+    if (z === 0) return 'Cohere';
+    if (z < 10) return 'Distant';
+    if (z === 10) return 'Mid';
+    return 'Close-up';
+  }
+
+  function zoomValueText(z) {
+    return z === 0 ? 'COHERE' : String(z);
+  }
+
+  function applyZoomUi(z) {
     if (navZoomSlider) {
       navZoomSlider.value = String(z);
       navZoomSlider.setAttribute('aria-valuenow', String(z));
-      navZoomSlider.setAttribute('aria-valuetext', z === 0 ? 'FIT' : String(z));
+      navZoomSlider.setAttribute(
+        'aria-valuetext',
+        z === 0 ? 'Cohere' : `${zoomModeName(z)} ${z}`
+      );
     }
-    if (navZoomValue) navZoomValue.textContent = z === 0 ? 'FIT' : String(z);
+    if (navZoomLabel) navZoomLabel.textContent = zoomModeName(z);
+    if (navZoomValue) navZoomValue.textContent = zoomValueText(z);
+  }
+
+  function syncZoomUi() {
+    const z = clampZoom(camera.zoom);
+    camera.zoom = z;
+    applyZoomUi(z);
   }
 
   function setZoom(nextZoom, { clientX, clientY } = {}) {
@@ -887,13 +907,7 @@
       camera.targetY = camera.focusY;
       clampFocusToCrop();
       applyCamera();
-      const snapped = scaleToZoomLevel(pinchScale);
-      if (navZoomSlider) {
-        navZoomSlider.value = String(snapped);
-        navZoomSlider.setAttribute('aria-valuenow', String(snapped));
-        navZoomSlider.setAttribute('aria-valuetext', snapped === 0 ? 'FIT' : String(snapped));
-      }
-      if (navZoomValue) navZoomValue.textContent = snapped === 0 ? 'FIT' : String(snapped);
+      applyZoomUi(scaleToZoomLevel(pinchScale));
     }
 
     function endPinch(midX, midY) {

@@ -887,8 +887,10 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
 .nav-zoom-label {
   font-family: 'IBM Plex Mono', ui-monospace, monospace;
   font-size: 8px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .nav-zoom-value {
@@ -1163,7 +1165,7 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
 
   .nav-zoom-label {
     font-size: 9px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.06em;
   }
 
   .nav-zoom-value {
