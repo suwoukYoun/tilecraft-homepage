@@ -531,7 +531,9 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
 }
 
 .brand-subtitle-ko {
-  margin-left: 0.4em;
+  display: inline;
+  margin: 0 0 0 0.4em;
+  padding: 0;
   font-family:
     'Noto Sans KR',
     -apple-system,
