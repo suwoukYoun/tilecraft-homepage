@@ -534,18 +534,10 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
   display: inline;
   margin: 0 0 0 0.4em;
   padding: 0;
-  font-family:
-    'Noto Sans KR',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.05em;
   text-transform: none;
   color: #ffffff;
   opacity: 1;
@@ -592,6 +584,71 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
   }
 }
 
+.brand-tagline {
+  display: block;
+  width: max-content;
+  max-width: none;
+  margin-top: 0.35rem;
+  color: #ffffff;
+  text-shadow:
+    1px 1px 3px rgba(0, 0, 0, 0.9),
+    0 0 8px rgba(0, 0, 0, 0.7);
+}
+
+.brand-tagline-en {
+  display: block;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: #ffffff;
+}
+
+.brand-tagline-ko {
+  display: block;
+  margin-top: 0.08rem;
+  font-family:
+    'Noto Sans KR',
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  color: #ffffff;
+  opacity: 0.92;
+}
+
+@media (min-width: 768px) {
+  .brand-tagline-en {
+    font-size: 12px;
+  }
+
+  .brand-tagline-ko {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 767px) {
+  .brand-tagline {
+    width: auto;
+    max-width: calc(100vw - 3rem);
+  }
+
+  .brand-tagline-en {
+    font-size: 11px;
+    white-space: normal;
+  }
+
+  .brand-tagline-ko {
+    font-size: 10px;
+  }
+}
+
 .about-nav {
   position: absolute;
   top: 4.85rem;
@@ -602,7 +659,7 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
 
 @media (min-width: 768px) {
   .about-nav {
-    top: 6.15rem;
+    top: 8.7rem;
     left: 2.5rem;
   }
 }
@@ -1396,27 +1453,24 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
 .value-line {
   margin: 0;
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.45rem 0.7rem;
-  line-height: 1.2;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.18rem;
+  line-height: 1.3;
 }
 
 .value-bold {
-  font-family:
-    'Noto Sans KR',
-    Pretendard,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
   font-weight: 700;
-  font-size: clamp(0.78rem, 1.35vw, 0.95rem);
-  letter-spacing: -0.02em;
+  font-size: clamp(0.72rem, 1.2vw, 0.82rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: #fff;
+}
+
+.value-bold-phrase {
+  text-transform: none;
+  letter-spacing: 0.02em;
 }
 
 .value-sub {
@@ -1430,11 +1484,27 @@ body.is-liquid:not(.is-grid-view):not(.is-preview-nav) #bg-tile.is-active {
     'Helvetica Neue',
     Arial,
     sans-serif;
-  font-size: clamp(calc(0.75rem + 1px), 1.2vw, calc(0.85rem + 1px));
+  font-size: clamp(0.75rem, 1.2vw, 0.86rem);
   font-weight: 500;
   color: #fff;
   letter-spacing: -0.01em;
   word-break: keep-all;
+}
+
+.value-sub-ko {
+  font-family:
+    'Noto Sans KR',
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-size: clamp(0.68rem, 1.05vw, 0.78rem);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+  line-height: 1.4;
 }
 
 .about-kicker {

@@ -702,14 +702,14 @@
   }
 
   function zoomModeName(z) {
-    if (z === 0) return 'Cohere';
+    if (z === 0) return 'Artwork View';
     if (z < 10) return 'Distant';
     if (z === 10) return 'Mid';
-    return 'Close-up';
+    return 'Tile View';
   }
 
   function zoomValueText(z) {
-    return z === 0 ? 'COHERE' : String(z);
+    return String(z);
   }
 
   function applyZoomUi(z) {
@@ -718,7 +718,7 @@
       navZoomSlider.setAttribute('aria-valuenow', String(z));
       navZoomSlider.setAttribute(
         'aria-valuetext',
-        z === 0 ? 'Cohere' : `${zoomModeName(z)} ${z}`
+        z === 0 ? 'Artwork View' : `${zoomModeName(z)} ${z}`
       );
     }
     if (navZoomLabel) navZoomLabel.textContent = zoomModeName(z);
