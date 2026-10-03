@@ -27,9 +27,9 @@ jobs:
           python-version: '3.12'
 
       - name: Generate catalog.json
-        run: python homepage/generate_catalog.py
+        run: python generate_catalog.py
 
-      - name: Write homepage/env.js from Secrets
+      - name: Write env.js from Secrets
         env:
           EMAILJS_PUBLIC_KEY: ${{ secrets.EMAILJS_PUBLIC_KEY }}
           EMAILJS_SERVICE_ID: ${{ secrets.EMAILJS_SERVICE_ID }}
@@ -50,7 +50,7 @@ jobs:
           public_key = esc(os.environ.get("EMAILJS_PUBLIC_KEY", ""))
           service_id = esc(os.environ.get("EMAILJS_SERVICE_ID", ""))
           template_id = esc(os.environ.get("EMAILJS_TEMPLATE_ID", ""))
-          Path("homepage/env.js").write_text(
+          Path("env.js").write_text(
               "/* Generated in CI from GitHub Secrets — do not edit */\n"
               "window.__EMAILJS__ = {\n"
               f"  publicKey: '{public_key}',\n"
@@ -59,16 +59,14 @@ jobs:
               "};\n",
               encoding="utf-8",
           )
-          print("Wrote homepage/env.js")
+          print("Wrote env.js")
           PY
 
       - name: Assemble site
         run: |
           mkdir -p _site
-          cp -r homepage assets _site/
-          cp index.html _site/index.html
-          # Domain-root files (CNAME, robots, sitemap) live in homepage/
-          cp homepage/CNAME homepage/robots.txt homepage/sitemap.xml _site/
+          cp index.html style.css script.js main.js catalog.json env.js CNAME robots.txt sitemap.xml _site/
+          cp -r assets _site/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

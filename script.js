@@ -8,7 +8,7 @@
 (() => {
   'use strict';
 
-  const ASSET_ROOT = '../assets';
+  const ASSET_ROOT = 'assets';
   const IMAGE_EXTS = ['webp', 'png'];
   let CATEGORIES = [];
 
@@ -110,12 +110,11 @@
   }
 
   async function loadCatalog() {
-    // Prefer relative catalog for GitHub Pages (/repo/homepage/).
-    // Absolute /api and /homepage paths are for local serve.py only.
+    // Relative catalog.json for GitHub Pages.
+    // /api/catalog is for local serve.py only.
     const endpoints = [
       `./catalog.json?t=${Date.now()}`,
       `/api/catalog?t=${Date.now()}`,
-      `/homepage/catalog.json?t=${Date.now()}`,
     ];
 
     for (const endpoint of endpoints) {
@@ -1463,7 +1462,7 @@
     if (!CATEGORIES.length) {
       navSetName.textContent = 'NO ASSETS';
       navMode.textContent = 'EMPTY';
-      console.warn('[Tile Craft] No categories found. Run: python homepage/generate_catalog.py');
+      console.warn('[Tile Craft] No categories found. Run: python generate_catalog.py');
     }
 
     const boot = pickBootSet();

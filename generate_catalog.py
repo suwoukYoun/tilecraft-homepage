@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Scan ../assets and write catalog.json for Tile Craft Navigator.
+"""Scan assets and write catalog.json for Tile Craft Navigator.
 
 Order rules:
 - Nav / catalog consumers use categories[] array order as written.
@@ -19,11 +19,11 @@ import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-ASSETS = ROOT.parent / "assets"
+ASSETS = ROOT / "assets"
 OUT = ROOT / "catalog.json"
 ORDER_FILE = ASSETS / "category-order.json"
 GROUPS_FILE = ASSETS / "category-groups.json"
-SKIP_CAT_DIRS = {"tiles"}
+SKIP_CAT_DIRS = {"tiles", "시공사례"}
 ART_GROUP_PREFIX = "ART COLLECTIONS"
 
 
@@ -317,7 +317,7 @@ def write_catalog(categories: list[dict] | None = None) -> dict:
     cats = categories if categories is not None else scan_catalog()
     payload = {
         "generatedAt": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
-        "assetRoot": "../assets",
+        "assetRoot": "assets",
         "groups": resolve_catalog_groups([c["id"] for c in cats if c.get("id")]),
         "categories": cats,
     }

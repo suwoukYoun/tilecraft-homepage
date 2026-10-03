@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Tile Craft local server
-- Serves project root (homepage + assets)
-- Live-scans assets for /homepage/catalog.json and /api/catalog
+- Serves project root (site + assets)
+- Live-scans assets for /catalog.json and /api/catalog
 - Background watcher keeps catalog.json fresh so new folders appear automatically
 """
 
@@ -19,7 +19,7 @@ from urllib.parse import urlparse
 
 from generate_catalog import ASSETS, OUT, write_catalog
 
-ROOT = Path(__file__).resolve().parent.parent  # QtProject/Homepage
+ROOT = Path(__file__).resolve().parent  # QtProject/Homepage
 ENV_LOCAL = ROOT / ".env.local"
 
 
@@ -131,20 +131,20 @@ class TileCraftHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path
 
-        if path in ("/homepage/catalog.json", "/catalog.json", "/api/catalog"):
+        if path in ("/catalog.json", "/api/catalog"):
             self._send_catalog()
             return
 
-        if path in ("/homepage/env.js", "/env.js"):
+        if path == "/env.js":
             self._send_env_js()
             return
 
         if path == "/robots.txt":
-            self._send_plain(ROOT / "homepage" / "robots.txt")
+            self._send_plain(ROOT / "robots.txt")
             return
 
         if path == "/sitemap.xml":
-            sitemap = ROOT / "homepage" / "sitemap.xml"
+            sitemap = ROOT / "sitemap.xml"
             if not sitemap.is_file():
                 self.send_error(404, "File not found")
                 return
@@ -156,12 +156,11 @@ class TileCraftHandler(SimpleHTTPRequestHandler):
             self.wfile.write(body)
             return
 
-        if path in ("/", "/homepage", "/homepage/"):
+        if path in ("/", "/index.html"):
             try:
                 write_catalog()
             except Exception:
                 pass
-            self.path = "/homepage/index.html"
 
         return super().do_GET()
 
@@ -170,7 +169,7 @@ class TileCraftHandler(SimpleHTTPRequestHandler):
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Tile Craft homepage server")
+    parser = argparse.ArgumentParser(description="Tile Craft local server")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--host", default="127.0.0.1")
     args = parser.parse_args()
@@ -184,7 +183,7 @@ def main() -> None:
         print(f"[emailjs] missing {ENV_LOCAL.name} — copy .env.local.example and fill EmailJS IDs")
 
     httpd = ThreadingHTTPServer((args.host, args.port), TileCraftHandler)
-    print(f"Tile Craft -> http://{args.host}:{args.port}/homepage/")
+    print(f"Tile Craft -> http://{args.host}:{args.port}/")
     print("Watching assets/ - new category folders appear in NAV automatically.")
     try:
         httpd.serve_forever()

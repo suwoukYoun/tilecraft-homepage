@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate homepage/env.js from root .env.local (for static deploy without serve.py)."""
+"""Generate env.js from .env.local (for static deploy without serve.py)."""
 
 from __future__ import annotations
 

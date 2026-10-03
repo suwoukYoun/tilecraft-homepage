@@ -6,7 +6,7 @@
 (() => {
   'use strict';
 
-  const ASSET_ROOT = '../assets';
+  const ASSET_ROOT = 'assets';
   const TILES_URL = `${ASSET_ROOT}/tiles/tiles.json`;
   const CAT_ORDER = ['wall', 'floor', 'other'];
   const CAT_LABELS = { wall: '벽', floor: '바닥', other: '기타' };
