@@ -1839,8 +1839,28 @@ body.is-computing .stage-rails {
 }
 
 @media (max-width: 767px) {
-  .site-footer {
-    display: none;
+  body[data-mode="cases"] .site-footer {
+    left: var(--case-photo-left, 0px);
+    width: var(--case-photo-width, 100%);
+    right: auto;
+    bottom: calc(var(--case-photo-bottom, 8rem) + 3px);
+    transform: none;
+    z-index: 30;
+    max-width: none;
+    padding-bottom: 0;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  body[data-mode="collection"] .site-footer {
+    left: 0.75rem;
+    right: 0.75rem;
+    width: auto;
+    bottom: var(--collection-footer-bottom, calc(var(--nav-mobile-h, 12.35rem) + 4.5rem));
+    transform: none;
+    z-index: 30;
+    max-width: none;
+    white-space: nowrap;
   }
 }
 
