@@ -3,6 +3,9 @@
 .env
 .env.*.local
 
+# Private consultation log (customer emails)
+private/
+
 # Generated EmailJS runtime config (created from .env.local)
 env.js
 

@@ -41,15 +41,22 @@
     return `${ASSET_ROOT}/${encodePath(rel)}`;
   }
 
-  function productUrl(category, setId) {
-    return [ASSET_ROOT, encodeURIComponent(category), encodeURIComponent(setId), 'product.json'].join('/');
+  function categorySegments(dirOrCategory) {
+    return String(dirOrCategory || '')
+      .split('/')
+      .filter(Boolean)
+      .map((part) => encodeURIComponent(part));
   }
 
-  function previewCandidates(category, setId, base) {
+  function productUrl(category, setId, dir) {
+    return [ASSET_ROOT, ...categorySegments(dir || category), encodeURIComponent(setId), 'product.json'].join('/');
+  }
+
+  function previewCandidates(category, setId, base, dir) {
     const stem = base || setId;
     const files = [`${stem}_preview.png`, `${stem}_preview.webp`, 'preview.png', 'preview.webp'];
     return files.map((file) =>
-      [ASSET_ROOT, encodeURIComponent(category), encodeURIComponent(setId), encodeURIComponent(file)].join('/')
+      [ASSET_ROOT, ...categorySegments(dir || category), encodeURIComponent(setId), encodeURIComponent(file)].join('/')
     );
   }
 
@@ -196,11 +203,13 @@
     if (!layerEl) return;
     const color = hex || 'transparent';
     layerEl.style.setProperty('--slot-hex', color);
-    layerEl.style.backgroundColor = color;
+    layerEl.style.removeProperty('background-color');
     if (!tile) {
       layerEl.style.backgroundImage = 'none';
+      layerEl.style.removeProperty('--tile-color');
       return;
     }
+    layerEl.style.setProperty('--tile-color', normalizeHex(tile.avgColor || color));
     const size = repeatPx(tile);
     layerEl.style.setProperty('--tile-cells-x', String(size.w));
     layerEl.style.setProperty('--tile-cells-y', String(size.h));
@@ -211,6 +220,9 @@
     const tile = effectiveTile(slot);
     paintLayer(slot.layerEl, tile, slot.hex);
     paintLayer(slot.miniEl, tile, slot.hex);
+    const chosen = !!(slot.userLocked || slot.hoverTile);
+    slot.layerEl?.classList.toggle('is-mapped', chosen);
+    slot.miniEl?.classList.toggle('is-mapped', chosen);
     if (slot.chipEl) {
       slot.chipEl.classList.toggle('is-mapped', !!slot.lockedTile);
       slot.chipEl.classList.toggle('is-preview', !!slot.hoverTile);
@@ -234,6 +246,7 @@
     if (!slot || !tile) return;
     slot.lockedTile = tile;
     slot.hoverTile = null;
+    slot.userLocked = true;
     paintSlot(slot);
     renderPickerGrid();
   }
@@ -489,7 +502,7 @@
     setActive(false);
   }
 
-  async function bindSet({ category, setId, base } = {}) {
+  async function bindSet({ category, setId, base, dir } = {}) {
     await ready;
     const bindId = ++state.bindId;
     if (!category || !setId) {
@@ -499,7 +512,7 @@
 
     let product = null;
     try {
-      const res = await fetch(`${productUrl(category, setId)}?t=${Date.now()}`, { cache: 'no-store' });
+      const res = await fetch(`${productUrl(category, setId, dir)}?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) product = await res.json();
     } catch (_) {
       product = null;
@@ -514,7 +527,7 @@
     }
 
     let img = null;
-    for (const url of previewCandidates(category, setId, base)) {
+    for (const url of previewCandidates(category, setId, base, dir)) {
       img = await tryLoadImage(url);
       if (img) break;
     }
@@ -543,6 +556,7 @@
       hex,
       maskUrl: maskUrls[i],
       lockedTile: closestTile(hex, wallPool.length ? wallPool : state.tiles),
+      userLocked: false,
       hoverTile: null,
       layerEl: null,
       miniEl: null,

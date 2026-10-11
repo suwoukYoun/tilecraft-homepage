@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-03T12:45:14",
+  "generatedAt": "2026-10-11T20:32:52",
   "assetRoot": "assets",
   "groups": [
     {
@@ -21,6 +21,7 @@
   "categories": [
     {
       "id": "ABSTRACT(추상화  옵아트)",
+      "dir": "ArtCollections/ABSTRACT(추상화  옵아트)",
       "label": "ABSTRACT(추상화  옵아트)",
       "sets": [
         {
@@ -60,6 +61,24 @@
           ]
         },
         {
+          "id": "Cosmic_Flow(우주의_흐름)",
+          "name": "Cosmic_Flow(우주의_흐름)",
+          "base": "Cosmic_Flow(우주의_흐름)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#00007F",
+            "#000000",
+            "#FFFFFF",
+            "#00AA00",
+            "#AA0000",
+            "#FFFF00"
+          ]
+        },
+        {
           "id": "Indigo_Flow_Vertical_Pillar(깊은_선율의_궤적)",
           "name": "Indigo_Flow_Vertical_Pillar(깊은_선율의_궤적)",
           "base": "Indigo_Flow_Vertical_Pillar(깊은_선율의_궤적)",
@@ -87,6 +106,20 @@
             "#FFFFFF",
             "#000000",
             "#00007F"
+          ]
+        },
+        {
+          "id": "INFINITE_MATRIX_Ed.2(착시의_궤적)",
+          "name": "INFINITE_MATRIX_Ed.2(착시의_궤적)",
+          "base": "INFINITE_MATRIX_Ed.2(착시의_궤적)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
           ]
         },
         {
@@ -188,43 +221,12 @@
             "#000000",
             "#00AA00"
           ]
-        },
-        {
-          "id": "INFINITE_MATRIX_Ed.2(착시의_궤적)",
-          "name": "INFINITE_MATRIX_Ed.2(착시의_궤적)",
-          "base": "INFINITE_MATRIX_Ed.2(착시의_궤적)",
-          "hasPreview": true,
-          "hasGrid": false,
-          "previewExt": "png",
-          "gridExt": "",
-          "hasProduct": true,
-          "palette": [
-            "#FFFFFF",
-            "#000000"
-          ]
-        },
-        {
-          "id": "Cosmic_Flow(우주의_흐름)",
-          "name": "Cosmic_Flow(우주의_흐름)",
-          "base": "Cosmic_Flow(우주의_흐름)",
-          "hasPreview": true,
-          "hasGrid": false,
-          "previewExt": "png",
-          "gridExt": "",
-          "hasProduct": true,
-          "palette": [
-            "#00007F",
-            "#000000",
-            "#FFFFFF",
-            "#00AA00",
-            "#AA0000",
-            "#FFFF00"
-          ]
         }
       ]
     },
     {
       "id": "MASTERPIECE(명화 동양화)",
+      "dir": "ArtCollections/MASTERPIECE(명화 동양화)",
       "label": "MASTERPIECE(명화 동양화)",
       "sets": [
         {
@@ -441,6 +443,7 @@
     },
     {
       "id": "POP & GRAPHIC (팝아트 일러스트)",
+      "dir": "ArtCollections/POP & GRAPHIC (팝아트 일러스트)",
       "label": "POP & GRAPHIC (팝아트 일러스트)",
       "sets": [
         {
@@ -542,6 +545,20 @@
           ]
         },
         {
+          "id": "Metallic_Majesty_(금속빛_위엄)",
+          "name": "Metallic_Majesty_(금속빛_위엄)",
+          "base": "Metallic_Majesty_(금속빛_위엄)",
+          "hasPreview": true,
+          "hasGrid": false,
+          "previewExt": "png",
+          "gridExt": "",
+          "hasProduct": true,
+          "palette": [
+            "#FFFFFF",
+            "#000000"
+          ]
+        },
+        {
           "id": "Neon_Heartbeat(_네온의_심장박동)",
           "name": "Neon_Heartbeat(_네온의_심장박동)",
           "base": "Neon_Heartbeat(_네온의_심장박동)",
@@ -626,25 +643,12 @@
             "#FFFF00",
             "#00AA00"
           ]
-        },
-        {
-          "id": "Metallic_Majesty_(금속빛_위엄)",
-          "name": "Metallic_Majesty_(금속빛_위엄)",
-          "base": "Metallic_Majesty_(금속빛_위엄)",
-          "hasPreview": true,
-          "hasGrid": false,
-          "previewExt": "png",
-          "gridExt": "",
-          "hasProduct": true,
-          "palette": [
-            "#FFFFFF",
-            "#000000"
-          ]
         }
       ]
     },
     {
       "id": "NATURE(보태니컬 풍경)",
+      "dir": "ArtCollections/NATURE(보태니컬 풍경)",
       "label": "NATURE(보태니컬 풍경)",
       "sets": [
         {
@@ -809,6 +813,7 @@
     },
     {
       "id": "MATERIAL(마블 테라조 질감 표현)",
+      "dir": "ArtCollections/MATERIAL(마블 테라조 질감 표현)",
       "label": "MATERIAL(마블 테라조 질감 표현)",
       "sets": [
         {
@@ -936,6 +941,7 @@
     },
     {
       "id": "PATTERN(기하학 지브라)",
+      "dir": "ArtCollections/PATTERN(기하학 지브라)",
       "label": "PATTERN(기하학 지브라)",
       "sets": [
         {
@@ -1121,6 +1127,7 @@
     },
     {
       "id": "CYBER FUTURISTIC(미래지향적 디지털 아트)",
+      "dir": "ArtCollections/CYBER FUTURISTIC(미래지향적 디지털 아트)",
       "label": "CYBER FUTURISTIC(미래지향적 디지털 아트)",
       "sets": [
         {
@@ -1326,6 +1333,7 @@
     },
     {
       "id": "SACRED & FAITH(종교 성화 사찰 아트)",
+      "dir": "ArtCollections/SACRED & FAITH(종교 성화 사찰 아트)",
       "label": "SACRED & FAITH(종교 성화 사찰 아트)",
       "sets": [
         {
@@ -1582,6 +1590,7 @@
     },
     {
       "id": "Kids & Fantasy(키즈 & 판타지)",
+      "dir": "ArtCollections/Kids & Fantasy(키즈 & 판타지)",
       "label": "Kids & Fantasy(키즈 & 판타지)",
       "sets": [
         {
@@ -1798,6 +1807,7 @@
     },
     {
       "id": "ARCHI-TEXT SURFACE(건축의 표면 위에 새겨지는 세계 모든 언어의 미학)",
+      "dir": "ArtCollections/ARCHI-TEXT SURFACE(건축의 표면 위에 새겨지는 세계 모든 언어의 미학)",
       "label": "ARCHI-TEXT SURFACE(건축의 표면 위에 새겨지는 세계 모든 언어의 미학)",
       "sets": [
         {
@@ -1816,9 +1826,9 @@
           ]
         },
         {
-          "id": "한국상용문구",
-          "name": "한국상용문구",
-          "base": "한국상용문구",
+          "id": "아랍상용문구",
+          "name": "아랍상용문구",
+          "base": "아랍상용문구",
           "hasPreview": true,
           "hasGrid": false,
           "previewExt": "png",
@@ -1861,9 +1871,9 @@
           ]
         },
         {
-          "id": "아랍상용문구",
-          "name": "아랍상용문구",
-          "base": "아랍상용문구",
+          "id": "한국상용문구",
+          "name": "한국상용문구",
+          "base": "한국상용문구",
           "hasPreview": true,
           "hasGrid": false,
           "previewExt": "png",
@@ -1874,6 +1884,82 @@
             "#000000",
             "#00007F"
           ]
+        }
+      ]
+    }
+  ],
+  "installations": [
+    {
+      "id": "Column (기둥)",
+      "name": "Column (기둥)",
+      "images": [
+        {
+          "name": "Digital Devotion (디지털 디보션)",
+          "file": "Digital Devotion (디지털 디보션).png",
+          "src": "assets/SpaceStylingExamples/Column%20%28%EA%B8%B0%EB%91%A5%29/Digital%20Devotion%20%28%EB%94%94%EC%A7%80%ED%84%B8%20%EB%94%94%EB%B3%B4%EC%85%98%29.png"
+        },
+        {
+          "name": "Electric Welcome(일렉트릭 웰컴)",
+          "file": "Electric Welcome(일렉트릭 웰컴).png",
+          "src": "assets/SpaceStylingExamples/Column%20%28%EA%B8%B0%EB%91%A5%29/Electric%20Welcome%28%EC%9D%BC%EB%A0%89%ED%8A%B8%EB%A6%AD%20%EC%9B%B0%EC%BB%B4%29.png"
+        }
+      ]
+    },
+    {
+      "id": "Exterior (외벽)",
+      "name": "Exterior (외벽)",
+      "images": [
+        {
+          "name": "Midnight Orchard (한밤의 과수원)",
+          "file": "Midnight Orchard (한밤의 과수원).png",
+          "src": "assets/SpaceStylingExamples/Exterior%20%28%EC%99%B8%EB%B2%BD%29/Midnight%20Orchard%20%28%ED%95%9C%EB%B0%A4%EC%9D%98%20%EA%B3%BC%EC%88%98%EC%9B%90%29.png"
+        },
+        {
+          "name": "Monolith Passion",
+          "file": "Monolith Passion.png",
+          "src": "assets/SpaceStylingExamples/Exterior%20%28%EC%99%B8%EB%B2%BD%29/Monolith%20Passion.png"
+        }
+      ]
+    },
+    {
+      "id": "Floor(바닥)",
+      "name": "Floor(바닥)",
+      "images": [
+        {
+          "name": "Welcome(환영합니다)",
+          "file": "Welcome(환영합니다).png",
+          "src": "assets/SpaceStylingExamples/Floor%28%EB%B0%94%EB%8B%A5%29/Welcome%28%ED%99%98%EC%98%81%ED%95%A9%EB%8B%88%EB%8B%A4%29.png"
+        }
+      ]
+    },
+    {
+      "id": "Interior Wall(내벽)",
+      "name": "Interior Wall(내벽)",
+      "images": [
+        {
+          "name": "Amber_Breeze_(앰버_브리즈)",
+          "file": "Amber_Breeze_(앰버_브리즈).png",
+          "src": "assets/SpaceStylingExamples/Interior%20Wall%28%EB%82%B4%EB%B2%BD%29/Amber_Breeze_%28%EC%95%B0%EB%B2%84_%EB%B8%8C%EB%A6%AC%EC%A6%88%29.png"
+        },
+        {
+          "name": "Chromatic Pathway (크로매틱 패스웨이)",
+          "file": "Chromatic Pathway (크로매틱 패스웨이).png",
+          "src": "assets/SpaceStylingExamples/Interior%20Wall%28%EB%82%B4%EB%B2%BD%29/Chromatic%20Pathway%20%28%ED%81%AC%EB%A1%9C%EB%A7%A4%ED%8B%B1%20%ED%8C%A8%EC%8A%A4%EC%9B%A8%EC%9D%B4%29.png"
+        },
+        {
+          "name": "Cyber Vortex(사이바 볼텍스)",
+          "file": "Cyber Vortex(사이바 볼텍스).png",
+          "src": "assets/SpaceStylingExamples/Interior%20Wall%28%EB%82%B4%EB%B2%BD%29/Cyber%20Vortex%28%EC%82%AC%EC%9D%B4%EB%B0%94%20%EB%B3%BC%ED%85%8D%EC%8A%A4%29.png"
+        },
+        {
+          "name": "Eternal Blessing(영원한 복)",
+          "file": "Eternal Blessing(영원한 복).png",
+          "src": "assets/SpaceStylingExamples/Interior%20Wall%28%EB%82%B4%EB%B2%BD%29/Eternal%20Blessing%28%EC%98%81%EC%9B%90%ED%95%9C%20%EB%B3%B5%29.png"
+        },
+        {
+          "name": "Sacred Ardor(세이크리드 아더)",
+          "file": "Sacred Ardor(세이크리드 아더).png",
+          "src": "assets/SpaceStylingExamples/Interior%20Wall%28%EB%82%B4%EB%B2%BD%29/Sacred%20Ardor%28%EC%84%B8%EC%9D%B4%ED%81%AC%EB%A6%AC%EB%93%9C%20%EC%95%84%EB%8D%94%29.png"
         }
       ]
     }

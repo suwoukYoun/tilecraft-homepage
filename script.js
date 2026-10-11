@@ -3,6 +3,8 @@
  * Liquid mouse background · Gravity dropzone · AI compute narrative
  * Categories/sets loaded from catalog.json — array order is nav order (no folder-name sort).
  * generate_catalog.py puts ART COLLECTIONS members first; nav stays one category level.
+ * Main menu: Space Styling Examples, Art Collections, Request Quote.
+ * Home is Space Styling Examples — Column (기둥), first image. Navigator stays on the collection view.
  */
 
 (() => {
@@ -10,14 +12,31 @@
 
   const ASSET_ROOT = 'assets';
   const IMAGE_EXTS = ['webp', 'png'];
+  const MENU_MODES = ['cases', 'collection', 'order'];
   let CATEGORIES = [];
+  let INSTALLATIONS = [];
+  let activeMode = 'cases';
+  let activeCaseKey = '';
+  let activeCaseSpace = '';
+
+  function categoryRel(category) {
+    const cat = CATEGORIES.find((c) => c.id === category);
+    return cat?.dir || category;
+  }
+
+  function categorySegments(category) {
+    return String(categoryRel(category))
+      .split('/')
+      .filter(Boolean)
+      .map((part) => encodeURIComponent(part));
+  }
 
   const pairPath = (category, setId, kind, baseName, ext = 'webp') => {
     const base = baseName || setId.replace(/_1SET$/, '');
     const file = `${base}_${kind}.${ext}`;
     return [
       ASSET_ROOT,
-      encodeURIComponent(category),
+      ...categorySegments(category),
       encodeURIComponent(setId),
       encodeURIComponent(file),
     ].join('/');
@@ -46,7 +65,7 @@
     }
     for (const ext of extOrder) {
       push(
-        [ASSET_ROOT, encodeURIComponent(category), encodeURIComponent(setId), `preview.${ext}`].join('/')
+        [ASSET_ROOT, ...categorySegments(category), encodeURIComponent(setId), `preview.${ext}`].join('/')
       );
     }
     return urls;
@@ -124,9 +143,11 @@
         const data = await res.json();
         const cats = Array.isArray(data) ? data : data.categories;
         if (Array.isArray(cats) && cats.length) {
+          INSTALLATIONS = normalizeInstallations(data.installations);
           CATEGORIES = dedupeCatalog(
             cats.map((c) => ({
               id: c.id,
+              dir: c.dir || c.id,
               label: c.label || c.id,
               sets: (c.sets || []).map((s) => ({
                 id: s.id,
@@ -148,13 +169,35 @@
       }
     }
     CATEGORIES = [];
+    INSTALLATIONS = [];
     return CATEGORIES;
   }
 
+  function normalizeInstallations(raw) {
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .filter((space) => space && space.id && Array.isArray(space.images))
+      .map((space) => ({
+        id: String(space.id),
+        name: String(space.name || space.id),
+        images: space.images
+          .filter((img) => img && (img.src || img.file))
+          .map((img) => ({
+            name: String(img.name || img.file || ''),
+            file: String(img.file || ''),
+            src: String(img.src || ''),
+          })),
+      }))
+      .filter((space) => space.images.length);
+  }
+
   function catalogSignature() {
-    return CATEGORIES.map(
-      (c) => `${c.id}:${c.sets.map((s) => s.id).join(',')}`
+    const caseSig = INSTALLATIONS.map(
+      (space) => `${space.id}:${space.images.map((img) => img.file).join(',')}`
     ).join('|');
+    return `${CATEGORIES.map(
+      (c) => `${c.id}:${c.sets.map((s) => s.id).join(',')}`
+    ).join('|')}||${caseSig}`;
   }
 
   function getCategory(catId) {
@@ -165,7 +208,18 @@
     return getCategory(catId)?.sets || [];
   }
 
+  function isAbstractCategory(id) {
+    const name = String(id || '');
+    return name.includes('ABSTRACT') || name.includes('추상화');
+  }
+
   function pickBootSet() {
+    const abstract = CATEGORIES.find((c) => isAbstractCategory(c.id) && c.sets?.length);
+    if (abstract) {
+      const set = abstract.sets.find((s) => s.hasProduct || (s.palette && s.palette.length)) || abstract.sets[0];
+      return { category: abstract.id, ...set };
+    }
+
     const withProduct = CATEGORIES.flatMap((c) =>
       c.sets
         .filter((s) => s.hasProduct || (s.palette && s.palette.length))
@@ -248,7 +302,7 @@
 
   function isStagePanIgnore(target) {
     return !!target?.closest?.(
-      '#palette-dock, #navigator, #launch-modal, #about-rail, #value-rail, .site-header, .launch-toast'
+      '#palette-dock, #navigator, #launch-modal, #about-rail, #value-rail, .site-header, .launch-toast, #main-menu, #cases-view, #quote-dock'
     );
   }
 
@@ -301,6 +355,10 @@
     }
 
     window.addEventListener('resize', () => {
+      if (activeMode === 'cases') {
+        fitCasePhoto();
+        placeCaseCaption();
+      }
       layoutMinimapFrame();
       const z = clampZoom(camera.zoom);
       if (z !== camera.zoom) {
@@ -346,6 +404,7 @@
       const set = cat?.sets?.find((s) => s.id === activeSetId) || cat?.sets?.[0];
       if (set) await selectSet(activeCategoryId, set.id, set.name);
     }
+    if (activeMode === 'cases') renderCases();
     return true;
   }
 
@@ -441,6 +500,8 @@
 
   async function selectSet(categoryId, setId, name) {
     if (busy) return;
+    const changingWork = activeCategoryId !== categoryId || activeSetId !== setId;
+    if (changingWork) camera.zoom = 0;
     activeCategoryId = categoryId;
     activeSetId = setId;
     showingTile = true;
@@ -485,6 +546,7 @@
     const meta = findSetMeta(categoryId, setId);
     await window.TileCraftSim.bindSet({
       category: categoryId,
+      dir: categoryRel(categoryId),
       setId,
       base: meta?.base,
     });
@@ -1275,15 +1337,35 @@
   }
 
   function requestDropAction() {
-    if (!busy) openLaunchModal();
+    if (busy) return;
+    if (activeMode === 'order') {
+      fileInput?.click();
+      return;
+    }
+    openLaunchModal();
+  }
+
+  function acceptQuoteReference(file) {
+    if (!file || !String(file.type || '').startsWith('image/')) return;
+    quoteReferenceName = file.name;
+    const nameEl = document.getElementById('quote-file-name');
+    if (nameEl) nameEl.textContent = file.name;
+    updateQuoteSummary();
   }
 
   dropzone.addEventListener('drop', (e) => {
     dropzone.classList.remove('is-dragover');
+    if (activeMode === 'order') {
+      acceptQuoteReference(e.dataTransfer?.files?.[0]);
+      return;
+    }
     requestDropAction();
   });
 
-  dropzone.addEventListener('click', requestDropAction);
+  dropzone.addEventListener('click', (event) => {
+    if (event.target === fileInput) return;
+    requestDropAction();
+  });
 
   dropzone.addEventListener('keydown', (e) => {
     if ((e.key === 'Enter' || e.key === ' ') && !busy) {
@@ -1455,6 +1537,480 @@
     setTimeout(fn, 1);
   }
 
+  /* ---------- Main menu ---------- */
+  function modeFromLocation() {
+    const hash = (location.hash || '').replace(/^#/, '').toLowerCase();
+    if (!hash || hash === 'cases') return 'cases';
+    return MENU_MODES.includes(hash) ? hash : 'cases';
+  }
+
+  function caseImageSrc(img, spaceId) {
+    if (img.src) return img.src;
+    return [ASSET_ROOT, 'SpaceStylingExamples', spaceId, img.file].map(encodeURIComponent).join('/');
+  }
+
+  function fitCasePhoto() {
+    const photo = document.getElementById('cases-photo');
+    if (!photo || photo.hidden) return;
+    const imgW = photo.naturalWidth;
+    const imgH = photo.naturalHeight;
+    if (!imgW || !imgH) return;
+
+    const frame = photo.closest('.cases-frame');
+    const mobile = isMobileLayout();
+    if (frame) {
+      if (mobile) {
+        const bar = document.getElementById('cases-bar');
+        const lead = document.querySelector('.header-lead');
+        const top = lead ? Math.ceil(lead.getBoundingClientRect().bottom) + 12 : 16;
+        const barTop = bar && !bar.hidden ? bar.getBoundingClientRect().top : window.innerHeight - 16;
+        const bottom = Math.max(16, Math.ceil(window.innerHeight - barTop) + 12);
+        frame.style.paddingTop = `${top}px`;
+        frame.style.paddingRight = '8px';
+        frame.style.paddingBottom = `${bottom}px`;
+        frame.style.paddingLeft = '8px';
+      } else {
+        frame.style.paddingTop = '';
+        frame.style.paddingRight = '';
+        frame.style.paddingBottom = '';
+        frame.style.paddingLeft = '';
+      }
+    }
+
+    const box = frame ? frame.getBoundingClientRect() : { width: window.innerWidth, height: window.innerHeight };
+    const frameStyle = frame ? getComputedStyle(frame) : null;
+    const padX = frameStyle ? parseFloat(frameStyle.paddingLeft) + parseFloat(frameStyle.paddingRight) : 16;
+    const padY = frameStyle ? parseFloat(frameStyle.paddingTop) + parseFloat(frameStyle.paddingBottom) : 16;
+    const availW = Math.max(1, box.width - padX);
+    const availH = Math.max(1, box.height - padY);
+    const scale = Math.min(availW / imgW, availH / imgH);
+    photo.style.width = `${Math.max(1, Math.round(imgW * scale))}px`;
+    photo.style.height = `${Math.max(1, Math.round(imgH * scale))}px`;
+  }
+
+  function bindCasePhotoFit() {
+    const photo = document.getElementById('cases-photo');
+    if (!photo || photo.dataset.fitBound === '1') return;
+    photo.dataset.fitBound = '1';
+    photo.addEventListener('load', fitCasePhoto);
+  }
+
+  function renderCases() {
+    const photo = document.getElementById('cases-photo');
+    const spaceEl = document.getElementById('cases-space');
+    const nameEl = document.getElementById('cases-name');
+    const spacesEl = document.getElementById('cases-spaces');
+    const strip = document.getElementById('cases-strip');
+    const empty = document.getElementById('cases-empty');
+    const bar = document.getElementById('cases-bar');
+    if (!photo || !strip || !empty || !bar || !spacesEl) return;
+
+    const spaces = INSTALLATIONS.filter((space) => space.images?.length);
+
+    if (!spaces.length) {
+      photo.hidden = true;
+      photo.removeAttribute('src');
+      photo.alt = '';
+      bar.hidden = true;
+      spacesEl.hidden = true;
+      spacesEl.replaceChildren();
+      strip.hidden = true;
+      strip.replaceChildren();
+      empty.hidden = false;
+      return;
+    }
+
+    empty.hidden = true;
+    photo.hidden = false;
+    bar.hidden = false;
+    spacesEl.hidden = false;
+
+    if (!spaces.some((space) => space.id === activeCaseSpace)) {
+      activeCaseSpace = spaces[0].id;
+    }
+    const space = spaces.find((item) => item.id === activeCaseSpace) || spaces[0];
+    activeCaseSpace = space.id;
+
+    spacesEl.replaceChildren(
+      ...spaces.map((item) => {
+        const on = item.id === space.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cases-space-btn' + (on ? ' is-active' : '');
+        btn.textContent = item.name;
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-selected', on ? 'true' : 'false');
+        btn.addEventListener('click', () => {
+          if (activeCaseSpace === item.id) return;
+          activeCaseSpace = item.id;
+          const first = item.images[0];
+          activeCaseKey = first ? `${item.id}/${first.file}` : '';
+          renderCases();
+        });
+        return btn;
+      })
+    );
+
+    const current = space.images.find((img) => `${space.id}/${img.file}` === activeCaseKey) || space.images[0];
+    activeCaseKey = `${space.id}/${current.file}`;
+    const src = caseImageSrc(current, space.id);
+    if (photo.getAttribute('src') !== src) photo.src = src;
+    photo.alt = `${space.name} ${current.name}`;
+    bindCasePhotoFit();
+    if (spaceEl) spaceEl.textContent = space.name;
+    if (nameEl) nameEl.textContent = current.name;
+
+    strip.hidden = false;
+    strip.replaceChildren(
+      ...space.images.map((img) => {
+        const on = `${space.id}/${img.file}` === activeCaseKey;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cases-thumb' + (on ? ' is-active' : '');
+        btn.title = img.name;
+        btn.setAttribute('aria-label', img.name);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        const thumb = document.createElement('img');
+        thumb.alt = '';
+        thumb.draggable = false;
+        thumb.src = caseImageSrc(img, space.id);
+        btn.appendChild(thumb);
+        btn.addEventListener('click', () => {
+          activeCaseKey = `${space.id}/${img.file}`;
+          renderCases();
+        });
+        return btn;
+      })
+    );
+    requestAnimationFrame(() => {
+      if (photo.complete) fitCasePhoto();
+      placeCaseCaption();
+    });
+  }
+
+  function revealCaseThumb(strip, active) {
+    const stripRect = strip.getBoundingClientRect();
+    const thumbRect = active.getBoundingClientRect();
+    if (thumbRect.left < stripRect.left - 1) {
+      strip.scrollLeft -= stripRect.left - thumbRect.left;
+    } else if (thumbRect.right > stripRect.right + 1) {
+      strip.scrollLeft += thumbRect.right - stripRect.right;
+    }
+  }
+
+  function placeCaseCaption() {
+    const strip = document.getElementById('cases-strip');
+    const caption = document.querySelector('.cases-caption');
+    if (!caption) return;
+    const active = strip && !strip.hidden ? strip.querySelector('.cases-thumb.is-active') : null;
+    if (strip && active) revealCaseThumb(strip, active);
+    if (isMobileLayout()) {
+      caption.style.setProperty('--cases-caption-inset', '0px');
+      return;
+    }
+    if (!strip || !active) {
+      caption.style.setProperty('--cases-caption-inset', '0px');
+      return;
+    }
+    const inset = strip.getBoundingClientRect().right - active.getBoundingClientRect().right;
+    caption.style.setProperty('--cases-caption-inset', `${Math.max(0, Math.round(inset))}px`);
+  }
+
+  let quoteReferenceName = '';
+  let quoteLaunchConfirmed = false;
+
+  function quoteAspect(width, height) {
+    const a = Math.round(Number(width) * 10);
+    const b = Math.round(Number(height) * 10);
+    if (!a || !b) return '';
+    const gcd = (x, y) => (y ? gcd(y, x % y) : x);
+    const d = gcd(a, b);
+    return `${a / d}:${b / d}`;
+  }
+
+  function quoteArtworkName() {
+    const style = document.getElementById('quote-style')?.value || '';
+    if (!style || style !== activeCategoryId) return '';
+    const cat = getCategory(activeCategoryId);
+    return cat?.sets?.find((set) => set.id === activeSetId)?.name || '';
+  }
+
+  function syncQuoteStyle() {
+    const select = document.getElementById('quote-style');
+    if (!select) return;
+    const preferred = CATEGORIES.some((cat) => cat.id === activeCategoryId)
+      ? activeCategoryId
+      : select.value;
+    select.replaceChildren(
+      ...CATEGORIES.map((cat) => {
+        const option = document.createElement('option');
+        option.value = cat.id;
+        option.textContent = cat.label || cat.id;
+        return option;
+      })
+    );
+    if (preferred) select.value = preferred;
+    updateQuoteSummary();
+  }
+
+  function readQuoteFields() {
+    const space = document.getElementById('quote-space')?.value.trim() || '';
+    const spaceNote = document.getElementById('quote-space-note')?.value.trim() || '';
+    const width = document.getElementById('quote-width')?.value.trim() || '';
+    const height = document.getElementById('quote-height')?.value.trim() || '';
+    const style = document.getElementById('quote-style')?.value.trim() || '';
+    const note = document.getElementById('quote-note')?.value.trim() || '';
+    const email = document.getElementById('quote-email')?.value.trim() || '';
+    return { space, spaceNote, width, height, style, note, email, artwork: quoteArtworkName() };
+  }
+
+  function updateQuoteSummary() {
+    const summary = document.getElementById('quote-summary');
+    if (!summary) return;
+    const fields = readQuoteFields();
+    const lines = [];
+    if (fields.space) lines.push(`시공 장소: ${fields.space}${fields.spaceNote ? `, ${fields.spaceNote}` : ''}`);
+    if (fields.width && fields.height) lines.push(`시공 크기: ${fields.width}m × ${fields.height}m`);
+    if (fields.style) {
+      lines.push(`이미지 스타일: ${fields.style}${fields.artwork ? ` · ${fields.artwork}` : ''}`);
+    }
+    if (quoteReferenceName) lines.push(`참고 이미지: ${quoteReferenceName}`);
+    if (fields.note) lines.push(`요청: ${fields.note}`);
+    summary.textContent = lines.length
+      ? lines.join('\n')
+      : '장소, 크기, 스타일을 입력하면 요청 요약이 여기에 표시됩니다.';
+  }
+
+  function buildQuoteMessage(fields) {
+    const spaceEn = {
+      로비: 'hotel lobby',
+      외벽: 'exterior facade',
+      복도: 'corridor',
+      거실: 'living room',
+      욕실: 'bathroom',
+      바닥: 'floor',
+      기타: 'interior space',
+    }[fields.space] || fields.space;
+    const place = [spaceEn, fields.spaceNote].filter(Boolean).join(', ');
+    const size = fields.width && fields.height ? `${fields.width}m x ${fields.height}m` : '';
+    const style = [fields.style, fields.artwork].filter(Boolean).join(' / ');
+    const aspect = quoteAspect(fields.width, fields.height);
+    const prompt = [
+      'Architectural visualization of a 10mm square mosaic tile installation',
+      place ? ` in a ${place}` : '',
+      size ? `, wall ${fields.width}m wide by ${fields.height}m high` : '',
+      style ? `, style of ${style}` : '',
+      fields.note ? `, ${fields.note}` : '',
+      ', precise grout grid, photoreal, no text',
+      aspect ? ` --ar ${aspect}` : '',
+    ].join('');
+
+    return [
+      'Tile Craft 시공 시안 요청',
+      '',
+      `시공 장소: ${[fields.space, fields.spaceNote].filter(Boolean).join(', ') || '-'}`,
+      `시공 크기: ${size || '-'}`,
+      `이미지 스타일: ${style || '-'}`,
+      `참고 이미지: ${quoteReferenceName || '없음'}`,
+      `한 줄 요청: ${fields.note || '-'}`,
+      `이메일: ${fields.email}`,
+      `오픈 안내 확인: ${quoteLaunchConfirmed ? '예' : '아니오'}`,
+      '',
+      'Prompt:',
+      prompt,
+    ].join('\n');
+  }
+
+  async function saveConsultation(fields) {
+    const response = await fetch('/api/consultations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        space: fields.space,
+        spaceNote: fields.spaceNote,
+        widthM: fields.width,
+        heightM: fields.height,
+        style: fields.style,
+        artwork: fields.artwork,
+        note: fields.note,
+        email: fields.email,
+        referenceFile: quoteReferenceName,
+        launchConfirmed: quoteLaunchConfirmed,
+      }),
+    });
+    if (!response.ok) throw new Error('consultation log failed');
+  }
+
+  async function sendQuoteRequest(fields) {
+    const submit = document.getElementById('quote-submit');
+    const { publicKey, serviceId, templateId } = getEmailJsConfig();
+    let logSaved = false;
+
+    if (submit) {
+      submit.disabled = true;
+      submit.textContent = 'Sending…';
+    }
+    try {
+      try {
+        await saveConsultation(fields);
+        logSaved = true;
+      } catch (err) {
+        console.error('[consultation]', err);
+      }
+
+      if (!publicKey || !serviceId || !templateId) {
+        showLaunchToast(
+          logSaved
+            ? '상담 목록에는 남겼습니다. 이메일 설정이 아직 연결되지 않았습니다.'
+            : '이메일 설정이 아직 연결되지 않았습니다. .env.local을 확인해 주세요. / Email service is not configured.',
+          { error: true }
+        );
+        return;
+      }
+
+      await ensureEmailJs();
+      if (typeof emailjs === 'undefined' || typeof emailjs.send !== 'function') {
+        throw new Error('EmailJS SDK failed to load');
+      }
+      emailjs.init({ publicKey });
+      await emailjs.send(serviceId, templateId, {
+        user_email: fields.email,
+        message: buildQuoteMessage(fields),
+        reply_to: fields.email,
+      });
+      showLaunchToast(
+        logSaved
+          ? '시공 시안 요청이 접수되었습니다. / Your quote request has been received.'
+          : '메일은 보냈습니다. 상담 목록에는 남기지 못했습니다.'
+      );
+    } catch (err) {
+      console.error('[EmailJS]', err);
+      showLaunchToast(
+        logSaved
+          ? '상담 목록에는 남겼습니다. 메일 전송은 실패했습니다.'
+          : '전송에 실패했습니다. 잠시 후 다시 시도해 주세요. / Failed to send. Please try again.',
+        { error: true }
+      );
+    } finally {
+      if (submit) {
+        submit.disabled = false;
+        submit.textContent = '요청 보내기';
+      }
+    }
+  }
+
+  function bindQuoteForm() {
+    const form = document.getElementById('quote-form');
+    if (!form) return;
+    form.addEventListener('input', updateQuoteSummary);
+    form.addEventListener('change', updateQuoteSummary);
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const fields = readQuoteFields();
+      if (!fields.space || !fields.width || !fields.height || !fields.style || !fields.email) return;
+      sendQuoteRequest(fields);
+    });
+    document.getElementById('quote-launch-confirm')?.addEventListener('click', () => {
+      quoteLaunchConfirmed = true;
+      const note = document.getElementById('quote-launch-note');
+      if (note) note.hidden = true;
+    });
+    fileInput?.addEventListener('click', (event) => event.stopPropagation());
+    fileInput?.addEventListener('change', () => {
+      acceptQuoteReference(fileInput.files?.[0]);
+      fileInput.value = '';
+    });
+  }
+
+  function setMode(mode, { historyMode = 'push' } = {}) {
+    const next = MENU_MODES.includes(mode) ? mode : 'cases';
+    activeMode = next;
+
+    if (next === 'cases') {
+      const spacesEl = document.getElementById('cases-spaces');
+      const entering = body.dataset.mode !== 'cases';
+      if (entering || !spacesEl?.childElementCount) renderCases();
+      if (entering && spacesEl) void spacesEl.offsetWidth;
+    }
+
+    body.dataset.mode = next;
+    placeMobileMenu();
+
+    document.querySelectorAll('#main-menu [data-mode]').forEach((btn) => {
+      const on = btn.dataset.mode === next;
+      btn.classList.toggle('is-active', on);
+      if (on) btn.setAttribute('aria-current', 'page');
+      else btn.removeAttribute('aria-current');
+    });
+
+    const casesView = document.getElementById('cases-view');
+    if (casesView) casesView.hidden = next !== 'cases';
+    if (next === 'collection') showCollectionHome();
+    if (next === 'order') syncQuoteStyle();
+
+    const hash = next === 'cases' ? '' : `#${next}`;
+    const url = `${location.pathname}${location.search}${hash}`;
+    const current = `${location.pathname}${location.search}${location.hash}`;
+    if (current === url || historyMode === 'none') return;
+    if (historyMode === 'replace') history.replaceState({ mode: next }, '', url);
+    else history.pushState({ mode: next }, '', url);
+  }
+
+  function showCollectionHome() {
+    const boot = pickBootSet();
+    if (!boot) return;
+    camera.zoom = 0;
+    activeCategoryId = boot.category;
+    activeSetId = boot.id;
+    if (navCats) buildCategoryTabs();
+    selectSet(boot.category, boot.id, boot.name);
+  }
+
+  function placeMobileMenu() {
+    const menu = document.getElementById('main-menu');
+    const frame = document.querySelector('.navigator-frame');
+    const header = document.querySelector('.site-header');
+    if (!menu || !frame || !header) return;
+
+    const dockInNav = isMobileLayout() && body.dataset.mode === 'collection';
+    const parent = dockInNav ? frame : header;
+    if (menu.parentElement !== parent) {
+      if (dockInNav) frame.insertBefore(menu, frame.firstChild);
+      else header.appendChild(menu);
+    }
+
+    if (!dockInNav) {
+      body.style.removeProperty('--nav-mobile-h');
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      const nav = document.getElementById('navigator');
+      if (!nav || body.dataset.mode !== 'collection') return;
+      const height = Math.ceil(nav.getBoundingClientRect().height);
+      if (height > 0) body.style.setProperty('--nav-mobile-h', `${height}px`);
+    });
+  }
+
+  function bindMainMenu() {
+    document.querySelectorAll('#main-menu [data-mode]').forEach((btn) => {
+      btn.addEventListener('click', () => setMode(btn.dataset.mode));
+    });
+
+    window.matchMedia('(max-width: 767px)').addEventListener('change', placeMobileMenu);
+    window.addEventListener('resize', placeMobileMenu);
+
+    document.querySelector('.brand-mark')?.addEventListener('click', (event) => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+      event.preventDefault();
+      setMode('cases');
+    });
+
+    window.addEventListener('popstate', () => {
+      setMode(modeFromLocation(), { historyMode: 'none' });
+    });
+  }
+
   /* ---------- Boot ---------- */
   async function init() {
     await loadCatalog();
@@ -1476,6 +2032,9 @@
 
     await buildNavigator();
     bindStageDragPan();
+    bindMainMenu();
+    bindQuoteForm();
+    setMode(modeFromLocation(), { historyMode: 'replace' });
 
     scheduleIdle(() => {
       if (boot) selectSet(boot.category, boot.id, boot.name);

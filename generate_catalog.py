@@ -8,6 +8,7 @@ Order rules:
 - category-order.json and the previous catalog.json are fallbacks.
 - Categories not in ART COLLECTIONS are appended; they are not auto-joined.
 - Empty / other groups are not written to catalog.groups.
+- assets/SpaceStylingExamples/{공간}/사진 is written to installations, not categories.
 """
 
 from __future__ import annotations
@@ -17,14 +18,18 @@ import re
 import sys
 import unicodedata
 from pathlib import Path
+from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent
 ASSETS = ROOT / "assets"
 OUT = ROOT / "catalog.json"
 ORDER_FILE = ASSETS / "category-order.json"
 GROUPS_FILE = ASSETS / "category-groups.json"
-SKIP_CAT_DIRS = {"tiles", "시공사례"}
+COLLECTION_ROOT_NAME = "ArtCollections"
+SKIP_CAT_DIRS = {"tiles", "SpaceStylingExamples", COLLECTION_ROOT_NAME}
 ART_GROUP_PREFIX = "ART COLLECTIONS"
+CASE_ROOT_NAME = "SpaceStylingExamples"
+CASE_IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
 
 
 def normalize_id(name: str) -> str:
@@ -255,12 +260,16 @@ def scan_catalog() -> list[dict]:
     preferred_cats = preferred_category_ids(prev_cat_ids)
     skip_dirs = skip_category_dirs()
 
-    # normalized cat id -> (actual folder name, {set_id: entry})
-    found: dict[str, tuple[str, dict[str, dict]]] = {}
-    # dict preserves insertion/encounter order (no name sort)
-    for cat_dir in ASSETS.iterdir():
-        if not cat_dir.is_dir():
-            continue
+    # normalized cat id -> (actual folder name, {set_id: entry}, path under assets)
+    found: dict[str, tuple[str, dict[str, dict], str]] = {}
+    scan_roots = [ASSETS]
+    collection_root = ASSETS / COLLECTION_ROOT_NAME
+    if collection_root.is_dir():
+        scan_roots.append(collection_root)
+    category_dirs: list[Path] = []
+    for root in scan_roots:
+        category_dirs.extend(path for path in root.iterdir() if path.is_dir())
+    for cat_dir in category_dirs:
         cat_norm = normalize_id(cat_dir.name)
         if not cat_norm or cat_dir.name in skip_dirs or cat_norm in skip_dirs:
             continue
@@ -281,16 +290,18 @@ def scan_catalog() -> list[dict]:
                 sets_by_norm[set_norm] = entry["id"]
         if not sets_by_id:
             continue
+        rel = cat_dir.relative_to(ASSETS).as_posix()
         if cat_norm not in found:
-            found[cat_norm] = (cat_dir.name, sets_by_id)
+            found[cat_norm] = (cat_dir.name, sets_by_id, rel)
             continue
-        old_name, old_sets = found[cat_norm]
+        old_name, old_sets, _old_rel = found[cat_norm]
         if prefer_canonical_dir(
             old_name, cat_dir.name, len(old_sets), len(sets_by_id), prev_cat_ids
         ):
-            found[cat_norm] = (cat_dir.name, sets_by_id)
+            found[cat_norm] = (cat_dir.name, sets_by_id, rel)
 
-    found_by_id = {actual: sets for actual, sets in found.values()}
+    found_by_id = {actual: sets for actual, sets, _rel in found.values()}
+    dir_by_id = {actual: rel for actual, _sets, rel in found.values()}
     prev_set_by_norm = {normalize_id(cid): sids for cid, sids in prev_set_order.items()}
     prev_label_by_norm = {normalize_id(cid): label for cid, label in prev_labels.items()}
 
@@ -304,6 +315,7 @@ def scan_catalog() -> list[dict]:
         ordered.append(
             {
                 "id": cat_id,
+                "dir": dir_by_id[cat_id],
                 "label": prev_labels.get(cat_id)
                 or prev_label_by_norm.get(normalize_id(cat_id))
                 or cat_id,
@@ -313,6 +325,44 @@ def scan_catalog() -> list[dict]:
     return ordered
 
 
+def case_image_src(space: str, filename: str) -> str:
+    return "/".join(quote(part) for part in ("assets", CASE_ROOT_NAME, space, filename))
+
+
+def scan_installations() -> list[dict]:
+    """Photos under assets/SpaceStylingExamples/{space}/. Not product sets."""
+    root = ASSETS / CASE_ROOT_NAME
+    if not root.is_dir():
+        return []
+    spaces: list[dict] = []
+    for space_dir in root.iterdir():
+        if not space_dir.is_dir() or space_dir.name.startswith("."):
+            continue
+        images: list[dict] = []
+        for file in space_dir.iterdir():
+            if not file.is_file() or file.name.startswith("."):
+                continue
+            if file.suffix.lower() not in CASE_IMAGE_EXTS:
+                continue
+            images.append(
+                {
+                    "name": file.stem,
+                    "file": file.name,
+                    "src": case_image_src(space_dir.name, file.name),
+                }
+            )
+        if not images:
+            continue
+        spaces.append(
+            {
+                "id": space_dir.name,
+                "name": space_dir.name,
+                "images": images,
+            }
+        )
+    return spaces
+
+
 def write_catalog(categories: list[dict] | None = None) -> dict:
     cats = categories if categories is not None else scan_catalog()
     payload = {
@@ -320,6 +370,7 @@ def write_catalog(categories: list[dict] | None = None) -> dict:
         "assetRoot": "assets",
         "groups": resolve_catalog_groups([c["id"] for c in cats if c.get("id")]),
         "categories": cats,
+        "installations": scan_installations(),
     }
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     return payload
@@ -333,6 +384,9 @@ def main() -> int:
     groups = payload.get("groups") or []
     if groups:
         print("Groups:", " · ".join(str(g.get("name") or "") for g in groups))
+    installs = payload.get("installations") or []
+    photo_count = sum(len(space.get("images") or []) for space in installs)
+    print(f"Installations: {photo_count} photos in {len(installs)} spaces")
     print("Order:", " → ".join(c["id"] for c in cats))
     return 0
 
