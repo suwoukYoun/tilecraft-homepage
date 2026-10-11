@@ -1,0 +1,34 @@
+{
+  "spaces": [
+    {
+      "id": "Column (기둥)",
+      "images": [
+        "Digital Devotion (디지털 디보션).png",
+        "Electric Welcome(일렉트릭 웰컴).png"
+      ]
+    },
+    {
+      "id": "Exterior (외벽)",
+      "images": [
+        "Midnight Orchard (한밤의 과수원).png",
+        "Monolith Passion.png"
+      ]
+    },
+    {
+      "id": "Floor(바닥)",
+      "images": [
+        "Welcome(환영합니다).png"
+      ]
+    },
+    {
+      "id": "Interior Wall(내벽)",
+      "images": [
+        "Amber_Breeze_(앰버_브리즈).png",
+        "Chromatic Pathway (크로매틱 패스웨이).png",
+        "Cyber Vortex(사이바 볼텍스).png",
+        "Eternal Blessing(영원한 복).png",
+        "Sacred Ardor(세이크리드 아더).png"
+      ]
+    }
+  ]
+}

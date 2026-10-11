@@ -9,6 +9,7 @@ Order rules:
 - Categories not in ART COLLECTIONS are appended; they are not auto-joined.
 - Empty / other groups are not written to catalog.groups.
 - assets/SpaceStylingExamples/{공간}/사진 is written to installations, not categories.
+- installation-order.json sets space and photo order. Previous catalog.json is the fallback.
 """
 
 from __future__ import annotations
@@ -24,6 +25,7 @@ ROOT = Path(__file__).resolve().parent
 ASSETS = ROOT / "assets"
 OUT = ROOT / "catalog.json"
 ORDER_FILE = ASSETS / "category-order.json"
+INSTALL_ORDER_FILE = ASSETS / "installation-order.json"
 GROUPS_FILE = ASSETS / "category-groups.json"
 COLLECTION_ROOT_NAME = "ArtCollections"
 SKIP_CAT_DIRS = {"tiles", "SpaceStylingExamples", COLLECTION_ROOT_NAME}
@@ -329,38 +331,114 @@ def case_image_src(space: str, filename: str) -> str:
     return "/".join(quote(part) for part in ("assets", CASE_ROOT_NAME, space, filename))
 
 
+def _order_lists_from_spaces(spaces) -> tuple[list[str], dict[str, list[str]]]:
+    space_ids: list[str] = []
+    images: dict[str, list[str]] = {}
+    if not isinstance(spaces, list):
+        return space_ids, images
+    for space in spaces:
+        if not isinstance(space, dict) or not space.get("id"):
+            continue
+        sid = str(space["id"])
+        space_ids.append(sid)
+        files = space.get("images") or []
+        names: list[str] = []
+        for image in files:
+            if isinstance(image, str) and image:
+                names.append(image)
+            elif isinstance(image, dict) and image.get("file"):
+                names.append(str(image["file"]))
+        images[sid] = names
+    return space_ids, images
+
+
+def load_installation_order_file() -> tuple[list[str], dict[str, list[str]]]:
+    if not INSTALL_ORDER_FILE.is_file():
+        return [], {}
+    try:
+        data = json.loads(INSTALL_ORDER_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return [], {}
+    spaces = data.get("spaces") if isinstance(data, dict) else data
+    return _order_lists_from_spaces(spaces)
+
+
+def load_existing_installation_order() -> tuple[list[str], dict[str, list[str]]]:
+    if not OUT.is_file():
+        return [], {}
+    try:
+        data = json.loads(OUT.read_text(encoding="utf-8"))
+    except Exception:
+        return [], {}
+    return _order_lists_from_spaces(data.get("installations") if isinstance(data, dict) else None)
+
+
+def preferred_names(primary: list[str], fallback: list[str]) -> list[str]:
+    preferred: list[str] = []
+    for name in primary + fallback:
+        if name and name not in preferred:
+            preferred.append(name)
+    return preferred
+
+
+def names_for_space(mapping: dict[str, list[str]], space_id: str) -> list[str]:
+    if space_id in mapping:
+        return mapping[space_id]
+    norm = normalize_id(space_id)
+    for key, value in mapping.items():
+        if normalize_id(key) == norm:
+            return value
+    return []
+
+
 def scan_installations() -> list[dict]:
-    """Photos under assets/SpaceStylingExamples/{space}/. Not product sets."""
+    """Photos under assets/SpaceStylingExamples/{space}/. Not product sets.
+
+    Space and photo order come from installation-order.json, then the previous
+    catalog.json. Folders and files not listed are appended in encounter order.
+    """
     root = ASSETS / CASE_ROOT_NAME
     if not root.is_dir():
         return []
-    spaces: list[dict] = []
+
+    file_spaces, file_images = load_installation_order_file()
+    prev_spaces, prev_images = load_existing_installation_order()
+    preferred_spaces = preferred_names(file_spaces, prev_spaces)
+
+    found: dict[str, dict[str, dict]] = {}
     for space_dir in root.iterdir():
         if not space_dir.is_dir() or space_dir.name.startswith("."):
             continue
-        images: list[dict] = []
+        images_by_file: dict[str, dict] = {}
         for file in space_dir.iterdir():
             if not file.is_file() or file.name.startswith("."):
                 continue
             if file.suffix.lower() not in CASE_IMAGE_EXTS:
                 continue
-            images.append(
-                {
-                    "name": file.stem,
-                    "file": file.name,
-                    "src": case_image_src(space_dir.name, file.name),
-                }
-            )
-        if not images:
-            continue
-        spaces.append(
+            images_by_file[file.name] = {
+                "name": file.stem,
+                "file": file.name,
+                "src": case_image_src(space_dir.name, file.name),
+            }
+        if images_by_file:
+            found[space_dir.name] = images_by_file
+
+    ordered: list[dict] = []
+    for space_id in order_items(preferred_spaces, found):
+        images_by_file = found[space_id]
+        preferred_images = preferred_names(
+            names_for_space(file_images, space_id),
+            names_for_space(prev_images, space_id),
+        )
+        image_ids = order_items(preferred_images, images_by_file)
+        ordered.append(
             {
-                "id": space_dir.name,
-                "name": space_dir.name,
-                "images": images,
+                "id": space_id,
+                "name": space_id,
+                "images": [images_by_file[image_id] for image_id in image_ids],
             }
         )
-    return spaces
+    return ordered
 
 
 def write_catalog(categories: list[dict] | None = None) -> dict:
